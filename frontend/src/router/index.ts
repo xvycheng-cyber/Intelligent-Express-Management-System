@@ -14,6 +14,12 @@ const router = createRouter({
       meta: { title: '批量地址录入' }
     },
     {
+      path: '/addresses',
+      name: 'addresses',
+      component: () => import('@/views/AddressListView.vue'),
+      meta: { title: '地址簿管理' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),

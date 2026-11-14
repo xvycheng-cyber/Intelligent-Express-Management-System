@@ -1,7 +1,7 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    name: 'edit' | 'list' | 'spark' | 'save' | 'restore' | 'info' | 'check' | 'inbox' | 'chevron'
+    name: 'edit' | 'list' | 'spark' | 'save' | 'restore' | 'info' | 'check' | 'inbox' | 'chevron' | 'plus' | 'search' | 'refresh' | 'trash'
     size?: number
   }>(),
   { size: 18 }
@@ -54,6 +54,20 @@ withDefaults(
     </template>
     <template v-else-if="name === 'chevron'">
       <path d="m9 6 6 6-6 6" />
+    </template>
+    <template v-else-if="name === 'plus'">
+      <path d="M12 5v14M5 12h14" />
+    </template>
+    <template v-else-if="name === 'search'">
+      <circle cx="10.5" cy="10.5" r="6.5" />
+      <path d="m16 16 4 4" />
+    </template>
+    <template v-else-if="name === 'refresh'">
+      <path d="M20 11a8 8 0 1 0-2.3 6" />
+      <path d="M20 4v7h-7" />
+    </template>
+    <template v-else-if="name === 'trash'">
+      <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5" />
     </template>
   </svg>
 </template>

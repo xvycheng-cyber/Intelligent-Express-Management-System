@@ -5,8 +5,15 @@ import AppIcon from '@/components/common/AppIcon.vue'
 import { getHealth } from '@/api/health'
 
 const route = useRoute()
-const activeMenu = computed(() => (route.path.startsWith('/import') ? 'import' : ''))
+const activeMenu = computed(() => {
+  if (route.path.startsWith('/import')) return 'import'
+  if (route.path.startsWith('/addresses')) return 'addresses'
+  return ''
+})
 const pageTitle = computed(() => (route.meta.title as string | undefined) ?? '批量地址录入')
+const pageStage = computed(() =>
+  route.path.startsWith('/addresses') ? 'MS-05 · 地址簿管理' : 'MS-04 · 批量地址录入'
+)
 const backendState = ref<'checking' | 'up' | 'down'>('checking')
 
 onMounted(async () => {
@@ -42,11 +49,14 @@ onMounted(async () => {
           <AppIcon name="edit" :size="18" />
           <span>批量地址录入</span>
         </RouterLink>
-        <div class="side-nav__item is-disabled" aria-disabled="true">
+        <RouterLink
+          class="side-nav__item"
+          :class="{ 'is-active': activeMenu === 'addresses' }"
+          to="/addresses"
+        >
           <AppIcon name="list" :size="18" />
           <span>地址簿管理</span>
-          <span class="side-nav__soon">即将上线</span>
-        </div>
+        </RouterLink>
       </nav>
 
       <div class="sidebar__footer">
@@ -80,7 +90,7 @@ onMounted(async () => {
 
       <footer class="app-footer">
         <span>Intelligent-Express-Management-System</span>
-        <span>MS-04 · 批量地址录入</span>
+        <span>{{ pageStage }}</span>
       </footer>
     </div>
   </div>

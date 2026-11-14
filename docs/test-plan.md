@@ -21,7 +21,7 @@
 | LIKE 转义单测 | `LikeEscaper` | 已执行 4 个 |
 | 码点校验单测 | `@CodePointLength` 1/50/51 | 已执行 5 个 |
 | 基础测试 | R、health、异常映射、DB health mock | 已执行 5 个 |
-| L4 浏览器/Playwright | 批量录入、解析、修正、确认保存 | 已执行 1 个端到端脚本（20 项断言）；列表管理未开发 |
+| L4 浏览器/Playwright | MS-04 批量录入、MS-05 地址簿管理 | 已执行 2 个端到端脚本；列表管理真实 MySQL/接口 |
 
 当前真实基线：`mvn clean test` = **146 tests, 0 failures, 0 errors, 0 skipped**。
 
@@ -176,6 +176,30 @@
 
 ---
 
+## 4.2 MS-05 地址簿浏览器用例
+
+执行脚本：`frontend/scripts/ms05-browser-check.mjs`（Playwright + 本机 Chrome，Vite dev + 实际后端/MySQL）。
+
+| 编号 | 场景 | 实际结果 |
+| --- | --- | --- |
+| TC-ADDR-UI-001 | 地址簿打开 | 通过 |
+| TC-ADDR-UI-002/003 | 真实列表与 total | 通过 |
+| TC-ADDR-UI-004/005/006 | 姓名/电话/地址搜索 | 通过 |
+| TC-ADDR-UI-007/008 | `%`/`_` 字面搜索 | 通过 |
+| TC-ADDR-UI-009/010 | 50/51 Unicode 码点关键词 | 50 通过；51 前端阻止 |
+| TC-ADDR-UI-011 | 重置搜索 | 通过 |
+| TC-ADDR-UI-012/013 | 分页/每页数量 | 通过 |
+| TC-ADDR-UI-014/015 | 翻页/搜索清空选择 | 通过 |
+| TC-ADDR-UI-016/017 | 新建/编辑 | 通过 |
+| TC-ADDR-UI-018 | 编辑后刷新 | 通过 |
+| TC-ADDR-UI-019 | 单条删除 | 通过 |
+| TC-ADDR-UI-020/021/022 | 批量选择/确认/仅提交选中 ID | 通过；请求体 2 个 ID |
+| TC-ADDR-UI-023 | 删当前页最后一条自动退页 | 通过 |
+| TC-ADDR-UI-024 | 无数据/无搜索结果 | 通过 |
+| TC-ADDR-UI-025 | 网络错误提示 | 通过（Playwright 路由模拟 50002） |
+
+---
+
 ## 5. MS-03 MySQL 集成用例
 
 使用独立 `express_address_book_test`，测试数据仅使用 `199` 前缀并在测试前后清理；不操作主库业务数据。
@@ -258,7 +282,7 @@ BUILD SUCCESS
 
 前端：本轮未修改前端，沿用此前 `npm run build` 通过。
 
-**未执行**：Playwright 纳入 CI、正式压力测试。MySQL 集成与 MS-04 浏览器脚本已实际执行；前端列表管理页面未开发。
+**未执行**：Playwright 纳入 CI、正式压力测试。MySQL 集成与 MS-04/MS-05 浏览器脚本已实际执行；地址簿高级配置未开发。
 
 ---
 
@@ -267,5 +291,5 @@ BUILD SUCCESS
 - Parser 单测、Controller MockMvc、真实 Parser/HTTP、MySQL 集成必须分开引用，不能互相冒充。
 - TC-PARSE-032 的 API 400/40001 由 Controller/HTTP 测试覆盖，Parser 单测只验证空结果。
 - 性能只做了临时 100 行探针（约 1.30ms/次），不是正式压测。
-- MS-03 已实现地址 CRUD、分页搜索、批量保存/删除；MS-04 已实现批量录入前端及 Playwright 端到端脚本；列表管理页面、Playwright CI 尚未实现。
+- MS-03 已实现地址 CRUD、分页搜索、批量保存/删除；MS-04/MS-05 已实现批量录入与地址簿管理前端及 Playwright 端到端脚本；Playwright CI 尚未实现。
 - MySQL 测试使用独立 `express_address_book_test`；主库未被测试写入。

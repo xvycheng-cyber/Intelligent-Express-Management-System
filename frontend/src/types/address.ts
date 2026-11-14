@@ -59,6 +59,20 @@ export interface BatchSaveResult {
   ids: string[]
 }
 
+export interface AddressSaveResult {
+  id: string
+}
+
+export interface BatchDeleteResult {
+  deletedCount: number
+}
+
+export interface AddressListQuery {
+  page: number
+  size: number
+  keyword?: string
+}
+
 export interface AddressVO {
   id: string
   receiverName: string
