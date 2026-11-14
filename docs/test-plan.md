@@ -3,7 +3,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 文档版本 | v1.1-final-ms03.1 |
-| 适用阶段 | MS-01 初始化、MS-02/02.2 解析器、MS-03/03.1 地址簿后端 |
+| 适用阶段 | MS-01 初始化、MS-02/02.2 解析器、MS-03/03.1 地址簿后端、MS-04 批量录入前端 |
 | 依据 | `requirements.md`、`api-design.md`、`parser-design.md`、`database-design.md` |
 | 重要声明 | 只有实际执行的测试才能标记为通过；Parser 单测、Controller MockMvc、真实 Parser/HTTP、MySQL 集成、Playwright 必须分开记录 |
 
@@ -21,7 +21,7 @@
 | LIKE 转义单测 | `LikeEscaper` | 已执行 4 个 |
 | 码点校验单测 | `@CodePointLength` 1/50/51 | 已执行 5 个 |
 | 基础测试 | R、health、异常映射、DB health mock | 已执行 5 个 |
-| L4 浏览器/Playwright | 录入、预览、保存、CRUD | 未执行 |
+| L4 浏览器/Playwright | 批量录入、解析、修正、确认保存 | 已执行 1 个端到端脚本（20 项断言）；列表管理未开发 |
 
 当前真实基线：`mvn clean test` = **146 tests, 0 failures, 0 errors, 0 skipped**。
 
@@ -147,6 +147,35 @@
 
 ---
 
+## 4.1 MS-04 批量录入浏览器用例
+
+执行脚本：`frontend/scripts/ms04-browser-check.mjs`（Playwright + 本机 Chrome，Vite dev + 实际后端）。
+
+| 编号 | 场景 | 实际结果 |
+| --- | --- | --- |
+| TC-UI-001 | 首页打开 | 通过；标题/侧栏/空状态 |
+| TC-UI-002 | 单条联系人 | 通过；1 行结果 |
+| TC-UI-003 | 多条联系人 | 通过；3 行结果 |
+| TC-UI-004 | 中文逗号 | 通过 |
+| TC-UI-005 | 英文逗号 | 通过 |
+| TC-UI-006 | Tab | 通过 |
+| TC-UI-007 | 空行 | 跳过空行，不计记录 |
+| TC-UI-008 | 解析结果展示 | 通过 |
+| TC-UI-009 | 异常数据展示 | 通过 |
+| TC-UI-010/011/012 | 修改姓名/电话/地址 | 通过 |
+| TC-UI-013 | 恢复原始内容 | 通过 |
+| TC-UI-014 | 人工修改标记 | 通过 |
+| TC-UI-015 | Unicode 姓名 | 51 码点提示超限；50 扩展平面通过 |
+| TC-UI-016 | 保存确认弹窗 | 通过 |
+| TC-UI-017 | INVALID 不提交 | 通过；实际提交 2，未修正 1 行 |
+| TC-UI-018 | 保存成功 | 通过；实际保存 3 条 |
+| TC-UI-019 | 保存失败保留数据 | 通过（浏览器层模拟 50002；实际后端 50002 已有 MySQL 测试） |
+| TC-UI-020 | 连续点击防重复 | 通过（模拟成功响应，请求计数 1） |
+
+控制台：无未预期错误；模拟 500 的资源错误在断言中显式排除。
+
+---
+
 ## 5. MS-03 MySQL 集成用例
 
 使用独立 `express_address_book_test`，测试数据仅使用 `199` 前缀并在测试前后清理；不操作主库业务数据。
@@ -229,7 +258,7 @@ BUILD SUCCESS
 
 前端：本轮未修改前端，沿用此前 `npm run build` 通过。
 
-**未执行**：Playwright/浏览器人工走查、正式压力测试。MySQL 集成已实际执行，使用独立测试库；主库未被测试写入。
+**未执行**：Playwright 纳入 CI、正式压力测试。MySQL 集成与 MS-04 浏览器脚本已实际执行；前端列表管理页面未开发。
 
 ---
 
@@ -238,5 +267,5 @@ BUILD SUCCESS
 - Parser 单测、Controller MockMvc、真实 Parser/HTTP、MySQL 集成必须分开引用，不能互相冒充。
 - TC-PARSE-032 的 API 400/40001 由 Controller/HTTP 测试覆盖，Parser 单测只验证空结果。
 - 性能只做了临时 100 行探针（约 1.30ms/次），不是正式压测。
-- MS-03 已实现地址 CRUD、分页搜索、批量保存/删除；Vue 页面、Playwright 未实现。
+- MS-03 已实现地址 CRUD、分页搜索、批量保存/删除；MS-04 已实现批量录入前端及 Playwright 端到端脚本；列表管理页面、Playwright CI 尚未实现。
 - MySQL 测试使用独立 `express_address_book_test`；主库未被测试写入。

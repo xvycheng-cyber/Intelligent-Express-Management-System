@@ -11,7 +11,7 @@ const router = createRouter({
       path: '/import',
       name: 'import',
       component: () => import('@/views/ImportView.vue'),
-      meta: { title: '智能录入' }
+      meta: { title: '批量地址录入' }
     },
     {
       path: '/:pathMatch(.*)*',

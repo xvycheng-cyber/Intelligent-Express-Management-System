@@ -1,7 +1,7 @@
 <template>
   <section class="not-found">
     <h2>页面不存在</h2>
-    <p>请返回 <RouterLink to="/import">智能录入</RouterLink>。</p>
+    <p>请返回 <RouterLink to="/import">批量地址录入</RouterLink>。</p>
   </section>
 </template>
 

@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 export interface Violation {
   field: string
   message: string
-  lineNo?: number
+  lineNo?: number | null
 }
 
 export interface HealthData {

@@ -6,13 +6,13 @@
 
 ## 当前状态
 
-**MS-01 工程初始化、MS-02 地址解析、MS-03 地址簿后端已完成（2026-11-14）**，尚未开发 Vue 地址录入/列表页面。当前包含可启动的 Spring Boot 后端、可启动的 Vue 3 前端、数据库初始化脚本、统一响应/异常、健康检查、`AddressParserService`、解析 API，以及地址 CRUD/分页搜索/批量保存/批量删除后端接口。
+**MS-01 工程初始化、MS-02 地址解析、MS-03 地址簿后端、MS-03.1 契约修复与 MS-04 批量录入前端已完成（2026-11-14）**。当前包含可启动的 Spring Boot 后端、可启动的 Vue 3 前端、批量地址录入页面、解析预览/人工修正/确认保存流程、地址 CRUD/分页搜索/批量保存/批量删除后端接口；地址簿列表管理页面尚未开发。
 
 实际测试：`mvn clean test` 共 **146** 个测试（parser 86 + Controller MockMvc 12 + 真实 Parser/HTTP 8 + MySQL 16 + DTO 10 + LIKE 4 + 码点 5 + 基础 5），全部通过；前端 `npm run build` 通过。
 
 设计文档入口：[`docs/requirements.md`](docs/requirements.md)、[`docs/architecture.md`](docs/architecture.md)、[`docs/database-design.md`](docs/database-design.md)、[`docs/api-design.md`](docs/api-design.md)、[`docs/parser-design.md`](docs/parser-design.md)、[`docs/test-plan.md`](docs/test-plan.md)、[`docs/development-roadmap.md`](docs/development-roadmap.md)、[`docs/course-paper-outline.md`](docs/course-paper-outline.md)。
 
-审查与修复记录：[`docs/review/ms-01-initialization-report.md`](docs/review/ms-01-initialization-report.md)、[`docs/review/ms-02-parser-report.md`](docs/review/ms-02-parser-report.md)、[`docs/review/ms-02-remediation-report.md`](docs/review/ms-02-remediation-report.md)、[`docs/review/ms-02-final-report.md`](docs/review/ms-02-final-report.md)、[`docs/review/ms-03-backend-report.md`](docs/review/ms-03-backend-report.md)、[`docs/review/ms-03-remediation-report.md`](docs/review/ms-03-remediation-report.md)、[`docs/review/database-account-change-report.md`](docs/review/database-account-change-report.md)、[`docs/review/p0-finalization-report.md`](docs/review/p0-finalization-report.md)。
+审查与修复记录：[`docs/review/ms-01-initialization-report.md`](docs/review/ms-01-initialization-report.md)、[`docs/review/ms-02-parser-report.md`](docs/review/ms-02-parser-report.md)、[`docs/review/ms-02-remediation-report.md`](docs/review/ms-02-remediation-report.md)、[`docs/review/ms-02-final-report.md`](docs/review/ms-02-final-report.md)、[`docs/review/ms-03-backend-report.md`](docs/review/ms-03-backend-report.md)、[`docs/review/ms-03-remediation-report.md`](docs/review/ms-03-remediation-report.md)、[`docs/review/ms-03-final-review.md`](docs/review/ms-03-final-review.md)、[`docs/review/ms-04-import-ui-report.md`](docs/review/ms-04-import-ui-report.md)、[`docs/review/database-account-change-report.md`](docs/review/database-account-change-report.md)、[`docs/review/p0-finalization-report.md`](docs/review/p0-finalization-report.md)。
 
 ---
 
@@ -20,7 +20,7 @@
 
 系统面向快递业务中的联系人地址录入场景：用户在多行文本框中粘贴多条联系人信息，点击"识别"后由规则解析器转换为结构化数据；用户在预览表中核对、修改，并在保存确认弹窗中确认后写入数据库。
 
-MS-02 实现解析模块与解析 API；MS-03 实现地址 CRUD、分页搜索、批量保存/删除后端。Vue 页面与 Playwright 尚未开发。
+MS-02 实现解析模块与解析 API；MS-03/03.1 实现地址 CRUD、分页搜索、批量保存/删除后端；MS-04 实现批量录入前端。地址簿列表管理页面与 Playwright CI 尚未开发。
 
 ## 2. 技术栈
 
@@ -135,7 +135,7 @@ cd backend && mvn test
 cd frontend && npm run build
 ```
 
-当前后端 **146** 个测试全部通过（含真实 MySQL 集成 16 个）；MySQL 集成使用独立 `express_address_book_test`，主库未被测试写入；Playwright、浏览器人工走查未执行。
+当前后端 **146** 个测试全部通过（含真实 MySQL 集成 16 个）；前端构建通过；`frontend/scripts/ms04-browser-check.mjs` 已用本机 Chrome + Playwright 实际跑通批量录入流程；MySQL 集成使用独立 `express_address_book_test`，主库未被测试写入；Playwright 尚未纳入 CI，浏览器人工走查未执行。
 
 ## 10. 目录
 

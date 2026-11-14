@@ -8,7 +8,7 @@
 
 ## 二、当前阶段
 
-MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端与 MS-03.1 契约修复已完成；解析 API 与地址 CRUD/批量接口已实现。尚未开发 Vue 地址录入页面、Playwright、用户登录；不得把占位页当作业务功能。
+MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端、MS-03.1 契约修复与 MS-04 批量录入前端已完成。解析 API、地址 CRUD/批量接口、批量录入页面已实现；地址簿列表管理页面、Playwright CI、用户登录尚未开发。
 
 ### 技术栈
 
@@ -75,11 +75,11 @@ MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端与 MS-03.1 �
 - 后端优先 `mvn clean test`，必要时 `mvn clean package`。
 - 前端 `npm run build`。
 - 未实际执行的测试不得标记为通过；Parser 单测、Controller 集成、数据库集成、浏览器测试必须区分。
-- 当前基线：146 个后端测试（parser 86 + Controller MockMvc 12 + 真实 Parser/HTTP 8 + MySQL 16 + DTO 10 + LIKE 4 + 码点 5 + 基础 5）全部通过；MySQL 使用独立测试库；Playwright 未执行。
+- 当前基线：146 个后端测试全部通过；`npm run build` 通过；`frontend/scripts/ms04-browser-check.mjs` 已用本机 Chrome + Playwright 实际跑通批量录入流程；MySQL 使用独立测试库；Playwright 尚未纳入 CI。
 
 ## 九、文档与变更
 
 - 设计细节以 `docs/requirements.md`、`architecture.md`、`database-design.md`、`api-design.md`、`parser-design.md`、`test-plan.md`、`development-roadmap.md`、`course-paper-outline.md` 为准。
 - 代码与文档不一致时先分析并同步；不要擅自改变整体架构。
-- MS-03 变更记录见 `docs/review/ms-03-backend-report.md`；MS-03.1 契约修复见 `docs/review/ms-03-remediation-report.md`；MS-02.2 见 `docs/review/ms-02-final-report.md`；MS-02.1 见 `docs/review/ms-02-remediation-report.md`。
+- MS-04 变更记录见 `docs/review/ms-04-import-ui-report.md`；MS-03.1 见 `docs/review/ms-03-remediation-report.md`；MS-03 见 `docs/review/ms-03-backend-report.md`。
 - 修改本文件（工作区根目录 `AGENTS.md` 为硬链接）后需重建硬链接并校验 SHA256。
