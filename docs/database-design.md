@@ -2,7 +2,7 @@
 
 | 项目 | 内容 |
 | --- | --- |
-| 文档版本 | v1.0 |
+| 文档版本 | v1.1-final（设计冻结） |
 | 数据库 | MySQL 8.0（InnoDB / utf8mb4） |
 | ORM | MyBatis-Plus 3.5.x（`BaseMapper` + 少量 XML） |
 | 关联文档 | `requirements.md`（BR-10～BR-12）、`api-design.md`（字段名）、`architecture.md`（数据访问层） |
@@ -86,14 +86,14 @@ CREATE TABLE IF NOT EXISTS express_address (
 | 字段 | 类型 | 允许 NULL | 默认值 | 约束/来源 | 后端校验（与列宽一致） | 说明 |
 | --- | --- | --- | --- | --- | --- | --- |
 | `id` | BIGINT | 否 | AUTO_INCREMENT | 主键 | 保存时忽略；路径参数必须为正整数 | 自增，不复用 |
-| `receiver_name` | VARCHAR(50) | 否 | 无 | 业务必填 | `@NotBlank`、`@Size(max=50)`；去首尾空白后非空 | 中文/英文姓名均可 |
+| `receiver_name` | VARCHAR(50) | 否 | 无 | 业务必填 | `@NotBlank`、`@CodePointLength(min=1,max=50)`；去首尾空白后非空；长度按 Unicode 码点 | 中文/英文姓名均可 |
 | `phone` | VARCHAR(20) | 否 | 无 | 业务必填 | `@NotBlank`、`@Size(max=20)`、`@Pattern`（见 parser PR-03）；保存前按 PR-03 规范化 | 规范化后号码；脱敏形态（`136xxxx0000`）保留 `x` |
 | `full_address` | VARCHAR(255) | 否 | 无 | 业务必填 | `@NotBlank`、`@Size(max=255)`；去首尾空白后非空 | 内部标点原样保留 |
 | `create_time` | DATETIME | 否 | CURRENT_TIMESTAMP | 数据库生成 | 请求不可写 | 列表默认排序字段 |
 | `update_time` | DATETIME | 否 | CURRENT_TIMESTAMP ON UPDATE | 数据库生成 | 请求不可写 | 编辑后自动更新 |
 | `is_deleted` | TINYINT | 否 | 0 | 逻辑删除 | 请求不可写 | 0/1 |
 
-> 长度对齐说明：`receiver_name` 50、`phone` 20、`full_address` 255 三个数字同时出现在**数据库列宽、DTO 注解、前端 `maxlength`** 三处，任何一处改动必须三处同步（见 §8 检查清单）。
+> 长度对齐说明：`receiver_name` 50（Unicode 码点）、`phone` 20、`full_address` 255 三个数字同时出现在**数据库列宽、DTO 注解、前端 code point 计数**三处，任何一处改动必须三处同步（见 §8 检查清单）。`VARCHAR(50)` 的 50 按 MySQL 字符计数，不使用 UTF-16 `String.length()`。
 
 ### 3.4 字符集与排序规则
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS express_address (
 | --- | --- | --- |
 | 字符集 | `utf8mb4` | 支持中文、emoji（地址/备注里可能出现）、生僻字 |
 | 排序规则 | `utf8mb4_0900_ai_ci` | MySQL 8 默认；大小写与重音不敏感，搜索"abc"可匹配"ABC" |
-| 连接参数 | `useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai` | 避免中文乱码与时区偏移 |
+| 连接参数 | `useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai` | Java 侧 UTF-8；库/表 `utf8mb4`，连接字符集与列字符集一致，避免中文/生僻字乱码 |
 
 ---
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS express_address (
 | `idx_deleted_create` | (`is_deleted`, `create_time`) | 列表默认查询 `WHERE is_deleted=0 ORDER BY create_time DESC` | 与列表 SQL 的最左前缀匹配 |
 | `idx_phone` | (`phone`) | 按完整电话精确查找/后续去重检查 | 单列 |
 
-**关于关键词搜索**：`keyword` 采用 `LIKE '%kw%'`，前后都有通配符，**不会使用任何索引**，属于全表扫描。本课程数据规模（万级以内）可接受，故不引入全文索引/ES。此结论在 `test-plan.md` 有对应性能用例（TC-PERF-02），并用实测数据说话，不预设"很快"。
+**关于关键词搜索**：`keyword` 转义后采用 `LIKE '%kw%' ESCAPE '!'`，前后都有通配符，**不会使用任何索引**，属于全表扫描。本课程数据规模（万级以内）可接受，故不引入全文索引/ES。此结论在 `test-plan.md` 有对应性能用例（TC-PERF-02），并用实测数据说话，不预设"很快"。
 
 **没有唯一索引**：同一个人可以有多条地址；同一地址也可能被不同收件人使用。加唯一约束会误伤正常数据。重复提示列为 Backlog（见 `requirements.md` §5.3）。
 
@@ -191,25 +191,28 @@ public class ExpressAddress {
 ### 7.2 Mapper
 
 ```java
-@Mapper
-public interface AddressMapper extends BaseMapper<ExpressAddress> { }
+public interface ExpressAddressMapper extends BaseMapper<ExpressAddress> {
+    IPage<ExpressAddress> selectPageByKeyword(Page<ExpressAddress> page,
+            @Param("keywordPattern") String keywordPattern);
+}
 ```
 
-- 单表 CRUD 全部使用 `BaseMapper`，不手写 SQL。
-- 仅当需要"关键词 + 分页"优化时才补一个 XML 方法；本设计优先使用 `LambdaQueryWrapper`（自动参数化、自动带逻辑删除条件）。
+- 单表 CRUD 使用 `BaseMapper`；
+- 关键词分页使用自定义 `resources/mapper/ExpressAddressMapper.xml`，参数绑定 + `ESCAPE '!'`，不使用字符串拼接；
+- Service 在调用前用 `LikeEscaper` 转义关键词。
 
 ### 7.3 典型查询
 
 | 场景 | 实现 | 生成的 SQL（示意） |
 | --- | --- | --- |
-| 分页列表 | `selectPage(page, wrapper.eq(...).and(w -> w.like(name).or().like(phone).or().like(address)).orderByDesc(createTime, id))` | `SELECT ... WHERE is_deleted=0 [AND (receiver_name LIKE ? OR phone LIKE ? OR full_address LIKE ?)] ORDER BY create_time DESC, id DESC LIMIT ?,?` |
+| 分页列表 | `selectPageByKeyword(page, LikeEscaper.escape(keyword))` + XML | `SELECT ... WHERE is_deleted=0 [AND (receiver_name LIKE CONCAT('%',?,'%') ESCAPE '!' OR ...)] ORDER BY create_time DESC, id DESC LIMIT ?,?` |
 | 详情 | `selectById(id)` | `SELECT ... WHERE id=? AND is_deleted=0` |
 | 新建 | `insert(entity)` | `INSERT INTO express_address (receiver_name, phone, full_address) VALUES (?,?,?)` |
-| 编辑 | `updateById(entity)` | `UPDATE express_address SET receiver_name=?, phone=?, full_address=? WHERE id=? AND is_deleted=0` |
+| 编辑 | `LambdaUpdateWrapper` 仅 set 三字段 | `UPDATE express_address SET receiver_name=?, phone=?, full_address=?, update_time=CURRENT_TIMESTAMP WHERE id=? AND is_deleted=0` |
 | 单删 | `deleteById(id)` | `UPDATE express_address SET is_deleted=1 WHERE id=? AND is_deleted=0` |
 | 批删 | `deleteBatchIds(ids)` | `UPDATE express_address SET is_deleted=1 WHERE id IN (?,?,...) AND is_deleted=0` |
 
-> 所有 `LIKE` 的参数都用 `%kw%` 拼在**参数值**里（MyBatis `#{}`），不是拼在 SQL 文本里，天然防注入。
+> **关键词参数（F-01）**：`LikeEscaper.escape(keyword)` 只返回转义后的字面量（`!`→`!!`、`%`→`!%`、`_`→`!_`），XML 用 `LIKE CONCAT('%', #{keywordPattern}, '%') ESCAPE '!'` 绑定；**禁止**把 `keyword` 拼进 SQL 文本。`ESCAPE '!'` 使反斜杠不再承担转义含义，`\` 按字面匹配。
 
 ---
 
@@ -226,6 +229,8 @@ public interface AddressMapper extends BaseMapper<ExpressAddress> { }
 | `is_deleted` | `isDeleted` | **不返回** | 无 | — |
 
 **id 类型说明**：MySQL `BIGINT` 超出 JavaScript `Number.MAX_SAFE_INTEGER`，因此响应中的 `id` 统一序列化为 **字符串**（由 `JacksonConfig` 对所有 `Long` 统一注册 `ToStringSerializer`，VO 不逐字段加注解），前端 TS 用 `string`，路径参数与 `ids` 数组也传字符串，后端 `@PathVariable Long` 自动转换。此约定在 `api-design.md` 同步声明，禁止前端用 `number`。
+
+**`isEdited` 说明（F-03）**：该字段是前端派生状态（`ParsedRow` 保存 `original` 快照，当前值与原始值比较得出），**没有数据库列、不参与任何 SQL、不进入 `AddressSaveDTO` 或请求体**，因此不出现在本节映射表中。
 
 **跨文档检查清单（每次改表必查）**：
 1. `database-design.md` 字段字典；
@@ -258,12 +263,50 @@ public interface AddressMapper extends BaseMapper<ExpressAddress> { }
 
 ---
 
-## 11. 安全与账号
+## 11. 安全与账号（v1.1-final 后的本机调整）
 
-1. 应用使用**专用数据库账号**，只授予 `express_address_book` 库的 `SELECT, INSERT, UPDATE, DELETE`，不授予 `DROP`。
-2. 数据库口令只能出现在 `backend/src/main/resources/application-local.yml`（已在 `.gitignore`）或环境变量 `DB_USERNAME` / `DB_PASSWORD`；`application.yml` 只允许写占位符 `${DB_PASSWORD}`，**禁止**把真实口令写入 `application.yml`、README、论文、截图。
+### 11.1 当前方案：本机 root
+
+| 账号 | 用途 | 权限 | 使用时机 |
+| --- | --- | --- | --- |
+| `root` | 建库/建表 + 应用运行 | 本机 MySQL 管理员（拥有全部权限） | 个人电脑课程演示；**仅 127.0.0.1** |
+| `express_app`（可选） | 需要最小权限时替换 root | 仅 `SELECT/INSERT/UPDATE/DELETE` | 执行可选 `admin-init.sql` 后 |
+
+**当前默认使用 root**，这是 2026-11-14 根据开发环境作出的决定，**替代** v1.1-final 原先“默认 express_app、禁止 root”的方案。
+
+安全限制：
+
+1. root 只允许本机 `127.0.0.1` 连接；**不得创建 `root@'%'`**，不得开放远程 root 登录。
+2. 口令只通过环境变量 `DB_PASSWORD` 或本地 `application-local.yml` 提供；`application.yml` 只写 `${DB_PASSWORD}`，**不写默认密码**。
+3. root 仅用于个人电脑课程设计与本地演示，**不得用于公共网络部署**。
+4. 不删除现有数据库、不重置现有 root 密码、不修改现有用户数据。
+
+### 11.2 可选最小权限方案 `express_app`
+
+如后续需要从 root 切换到最小权限账号，由管理员执行（口令用占位符）：
+
+```sql
+CREATE USER IF NOT EXISTS 'express_app'@'127.0.0.1'
+    IDENTIFIED BY '<LOCAL_STRONG_PASSWORD>';
+ALTER USER 'express_app'@'127.0.0.1'
+    IDENTIFIED BY '<LOCAL_STRONG_PASSWORD>';
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+    ON express_address_book.express_address
+    TO 'express_app'@'127.0.0.1';
+
+SHOW GRANTS FOR 'express_app'@'127.0.0.1';
+```
+
+> 该方案为**可选**，不是当前默认运行方式；不执行不影响 root 运行。
+
+### 11.3 配置与口令
+
+1. 口令只能出现在 `backend/src/main/resources/application-local.yml`（已在 `.gitignore`）或环境变量 `DB_USERNAME` / `DB_PASSWORD`；`application.yml` 只允许写 `${DB_USERNAME:root}` / `${DB_PASSWORD}`，**禁止**写真实口令。
+2. 示例文件 `application-local.example.yml` 只含 `root` 与 `CHANGE_ME_LOCAL_ONLY` 占位符，可提交。
 3. 论文截图不得出现数据库连接串、口令、真实联系人信息；演示数据使用 §6 的脱敏数据。
 4. 所有 SQL 使用 `#{}` 参数占位；禁止 `String` 拼接（含 `ORDER BY` 字段名，排序字段写死在代码中）。
+5. 数据库与后端均只供本机访问（`127.0.0.1`）；MySQL 建议 `bind-address=127.0.0.1`，不得把 3306/8080/5173 暴露到局域网/公网。
 
 ---
 
@@ -272,3 +315,8 @@ public interface AddressMapper extends BaseMapper<ExpressAddress> { }
 | 版本 | 日期 | 变更 | 说明 |
 | --- | --- | --- | --- |
 | v1.0 | 2026-11-14 | 建表与字段字典定稿 | 第一阶段设计，未执行任何 DDL |
+| v1.1 | 2026-11-14 | P0 修订：关键词 `ESCAPE '!'` 与转义说明、`isEdited` 不落库说明、最小权限与本机访问、示例配置文件更名 | 未执行任何 DDL |
+| v1.1-final | 2026-11-14 | 第二轮审查遗留修复：账号分离（管理员初始化 / `express_app` 运行）、仅 DML 授权示例、禁止 root 默认、`isEdited` 派生说明 | 未执行任何 DDL |
+| v1.1-final-ms01 | 2026-11-14 | MS-01 后按开发环境调整：默认 root 本机连接，口令外置；`express_app` 降级为可选方案；安全限制保留（仅 127.0.0.1、不建 root@'%'） | 已执行 schema（3306）与临时库验证 |
+| v1.1-final-ms02.1 | 2026-11-14 | 姓名长度改为 Unicode 码点；`VARCHAR(50)` 保持；文档区分码点与 UTF-16 code unit | 未执行数据库 CRUD |
+| v1.1-final-ms03 | 2026-11-14 | Mapper XML 关键词分页、逻辑删除、独立测试库 `express_address_book_test` | 已执行 CRUD/分页/LIKE/批量/事务回滚 MySQL 集成测试 |

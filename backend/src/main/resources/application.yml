@@ -1,0 +1,53 @@
+server:
+  address: 127.0.0.1
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: express-address-book
+  config:
+    # 本机配置优先；允许放在 classpath（src/main/resources）或 backend 工作目录
+    import: optional:classpath:application-local.yml,optional:file:./application-local.yml
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/express_address_book?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      # 健康检查不依赖数据库；连接在真正查询时才建立
+      initialization-fail-timeout: -1
+      connection-timeout: 3000
+      maximum-pool-size: 5
+  sql:
+    init:
+      mode: never
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: always
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    banner: false
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: INFO
+    com.express.addressbook: INFO

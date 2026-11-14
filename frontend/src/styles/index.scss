@@ -1,0 +1,41 @@
+:root {
+  --color-primary: #2f6fed;
+  --color-primary-soft: #eaf1ff;
+  --color-bg: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-border: #e4e8f0;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --radius-base: 10px;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+.el-card {
+  border-radius: var(--radius-base);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-card);
+}

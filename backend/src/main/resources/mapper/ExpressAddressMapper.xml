@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.express.addressbook.mapper.ExpressAddressMapper">
+
+    <select id="selectPageByKeyword" resultType="com.express.addressbook.entity.ExpressAddress">
+        SELECT id,
+               receiver_name,
+               phone,
+               full_address,
+               create_time,
+               update_time,
+               is_deleted
+        FROM express_address
+        WHERE is_deleted = 0
+        <if test="keywordPattern != null and keywordPattern != ''">
+            AND (
+                receiver_name LIKE CONCAT('%', #{keywordPattern}, '%') ESCAPE '!'
+                OR phone LIKE CONCAT('%', #{keywordPattern}, '%') ESCAPE '!'
+                OR full_address LIKE CONCAT('%', #{keywordPattern}, '%') ESCAPE '!'
+            )
+        </if>
+        ORDER BY create_time DESC, id DESC
+    </select>
+</mapper>

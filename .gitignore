@@ -1,0 +1,32 @@
+# ===== 本地配置与密钥（禁止入库）=====
+application-local.yml
+.env
+.env.*
+!.env.example
+!application-local.example.yml
+
+# ===== 构建产物 =====
+target/
+dist/
+node_modules/
+*.class
+
+# ===== 测试产物 =====
+test-results/
+playwright-report/
+
+# ===== 日志 =====
+*.log
+
+# ===== IDE / 编辑器 =====
+.idea/
+.vscode/
+*.iml
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+
+# ===== 其他临时文件 =====
+*.tmp
+*.bak

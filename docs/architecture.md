@@ -2,7 +2,7 @@
 
 | 项目 | 内容 |
 | --- | --- |
-| 文档版本 | v1.0 |
+| 文档版本 | v1.1-final（设计冻结） |
 | 架构风格 | 前后端分离 + 单体分层（Spring MVC 三层）+ 独立解析组件 |
 | 关联文档 | `requirements.md`、`database-design.md`、`api-design.md`、`parser-design.md`、`test-plan.md` |
 | 本文范围 | 总体架构、模块划分、目录结构、请求链路、Web 基础实践页面设计、Servlet 映射演示方案 |
@@ -77,19 +77,20 @@
 
 | 项 | 开发形态（默认） | 说明 |
 | --- | --- | --- |
-| 后端 | `mvn spring-boot:run` → `http://localhost:8080` | 连本地 MySQL |
-| 前端 | `npm run dev` → `http://localhost:5173` | Vite 开发服务器 |
-| 代理 | Vite `server.proxy`：`/api`、`/demo` → `http://localhost:8080` | 前端同源请求，**开发期无需 CORS** |
-| 生产（可选） | 前端 `npm run build` → `dist`；后端 `mvn package` → jar | 不强制；若部署则前端静态文件交由 Nginx 或 Boot 静态目录 |
+| 后端 | `mvn spring-boot:run` → `http://127.0.0.1:8080` | 连本地 MySQL；`server.address=127.0.0.1`，**只监听回环** |
+| 前端 | `npm run dev` → `http://127.0.0.1:5173` | Vite 开发服务器；`server.host='127.0.0.1'` |
+| 代理 | Vite `server.proxy`：`/api`、`/demo` → `http://127.0.0.1:8080` | 前端同源请求，**开发期无需 CORS** |
+| 生产（可选） | 前端 `npm run build` → `dist`；后端 `mvn package` → jar | 不强制；若部署则前端静态文件交由 Nginx 或 Boot 静态目录，并保持仅本机访问 |
 
 `vite.config.ts` 设计要点：
 
 ```ts
 server: {
+  host: '127.0.0.1',   // 仅本机
   port: 5173,
   proxy: {
-    '/api':  { target: 'http://localhost:8080', changeOrigin: true },
-    '/demo': { target: 'http://localhost:8080', changeOrigin: true }
+    '/api':  { target: 'http://127.0.0.1:8080', changeOrigin: true },
+    '/demo': { target: 'http://127.0.0.1:8080', changeOrigin: true }
   }
 }
 ```
@@ -118,20 +119,23 @@ backend/
     │   │   │   ├── PageResult.java                 # records/total/current/size/pages
     │   │   │   ├── BusinessException.java
     │   │   │   ├── GlobalExceptionHandler.java     # @RestControllerAdvice
+    │   │   │   ├── LikeEscaper.java                # 关键词 LIKE 通配符转义（! % _）
+    │   │   │   ├── Violation.java                  # 字段校验错误项（data.violations[]）
     │   │   │   └── LogMasker.java                  # 手机号/地址脱敏
     │   │   ├── config/
     │   │   │   ├── MybatisPlusConfig.java          # 分页插件
-    │   │   │   └── JacksonConfig.java              # 时间格式 + Long→String
+    │   │   │   └── JacksonConfig.java              # Long ID→String；long 计数保持数字
     │   │   ├── controller/
-    │   │   │   └── AddressController.java
+    │   │   │   ├── AddressController.java
+    │   │   │   ├── HealthController.java            # GET /api/health（仅 Web）
+    │   │   │   ├── DbHealthController.java          # GET /api/health/db（SELECT 1）
+    │   │   │   └── demo/ServletMappingDemoController.java # /demo/spring/**（Spring MVC 对照组）
     │   │   ├── servlet/
     │   │   │   ├── ExactMappingServlet.java        # /demo/servlet/exact
     │   │   │   ├── PrefixMappingServlet.java       # /demo/servlet/*
-    │   │   │   ├── ExtensionMappingServlet.java    # *.do
-    │   │   │   └── ServletMappingDemoController.java # /demo/spring/**（Spring MVC 对照组）
+    │   │   │   └── ExtensionMappingServlet.java    # *.do
     │   │   ├── service/
-    │   │   │   ├── AddressService.java
-    │   │   │   └── impl/AddressServiceImpl.java
+    │   │   │   └── AddressService.java              # 业务规则、事务、DTO→Entity
     │   │   ├── parser/
     │   │   │   ├── AddressParserService.java       # 唯一解析入口，无 Mapper 依赖
     │   │   │   ├── LineSplitter.java
@@ -139,35 +143,41 @@ backend/
     │   │   │   ├── NameExtractor.java
     │   │   │   ├── AddressExtractor.java
     │   │   │   ├── ParserLimits.java
+    │   │   │   ├── ParseInputGuard.java            # MS-02.1 API 上限前置校验
     │   │   │   ├── model/ (ParsedItem, LineError, ParseResult)
     │   │   │   └── strategy/AddressParseStrategy.java  # P2 扩展点
     │   │   ├── mapper/
-    │   │   │   └── AddressMapper.java
+    │   │   │   └── ExpressAddressMapper.java
     │   │   ├── entity/
     │   │   │   └── ExpressAddress.java
     │   │   ├── dto/                                # 入参
-    │   │   │   ├── ParseRequest.java
+    │   │   │   ├── AddressParseRequest.java         # 解析请求
     │   │   │   ├── AddressSaveDTO.java
     │   │   │   ├── AddressBatchSaveDTO.java
-    │   │   │   ├── BatchDeleteDTO.java
-    │   │   │   └── AddressQueryDTO.java
+    │   │   │   └── BatchDeleteDTO.java
     │   │   └── vo/                                 # 出参
     │   │       ├── AddressVO.java
-    │   │       ├── ParsedItemVO.java
-    │   │       ├── ParseResultVO.java
-    │   │       └── BatchSaveResultVO.java
+    │   │       ├── PageResult.java
+    │   │       ├── BatchSaveResult.java
+    │   │       └── BatchDeleteResult.java
+    │   │   └── validation/
+    │   │       ├── CodePointLength.java            # 1～50 Unicode 码点校验
+    │   │       └── CodePointLengthValidator.java
     │   └── resources/
     │       ├── application.yml
-    │       ├── application-local.yml.example       # 提交示例，真实文件 .gitignore
+    │       ├── application-local.example.yml       # 提交示例，真实 application-local.yml 被 .gitignore
     │       ├── db/
     │       │   ├── schema.sql
+    │       │   ├── admin-init.sql
     │       │   └── data.sql
-    │       └── mapper/AddressMapper.xml            # 仅在有自定义 SQL 时创建
+    │       └── mapper/ExpressAddressMapper.xml      # 关键词分页自定义 SQL
     └── test/java/com/express/addressbook/
         ├── parser/AddressParserServiceTest.java     # 纯单元，无 Spring
-        ├── service/AddressServiceImplTest.java      # Mockito
-        ├── controller/AddressControllerTest.java    # @WebMvcTest
-        └── integration/AddressApiIT.java            # 需本地 MySQL，@Tag("integration") 默认不跑
+        ├── common/LikeEscaperTest.java              # 转义单元测试（% _ ! \ 中文）
+        ├── dto/AddressSaveDTOTest.java              # 生产 DTO 码点/长度
+        ├── controller/AddressControllerTest.java    # @WebMvcTest（解析 API）
+        ├── integration/AddressParseIntegrationTest.java # 真实 Parser + HTTP
+        └── integration/AddressApiMysqlTest.java     # 真 MySQL，独立测试库
 ```
 
 ### 4.2 模块划分（与需求对应）
@@ -176,7 +186,7 @@ backend/
 | --- | --- | --- | --- |
 | M1 解析模块 | 多行文本 → 结构化条目（无 IO） | `AddressParserService` 及 4 个提取器 | FR-02、FR-03 |
 | M2 地址管理模块 | 增删改查、批量、分页搜索、事务 | `AddressController`、`AddressService`、`AddressMapper` | FR-05、FR-07～FR-13 |
-| M3 公共支撑模块 | 统一响应、异常、校验、脱敏、配置 | `R`、`ResultCode`、`GlobalExceptionHandler`、`LogMasker` | FR-18～FR-20 |
+| M3 公共支撑模块 | 统一响应、异常、校验、LIKE 转义、脱敏、配置 | `R`、`ResultCode`、`GlobalExceptionHandler`、`LikeEscaper`、`Violation`、`LogMasker` | FR-18～FR-20 |
 | M4 前端录入模块 | 文本域、识别、可编辑预览、确认保存 | `ImportView`、`ParseResultTable` | FR-01～FR-06 |
 | M5 前端管理模块 | 列表、搜索、分页、新建/编辑、删除/批删 | `AddressListView`、`AddressFormDialog` | FR-07～FR-14 |
 | M6 Web 实践模块 | 2.1～2.19 演示页 | `WebBasicsView` + `components/basics/*` | FR-15、FR-16 |
@@ -275,10 +285,12 @@ frontend/
 用户粘贴文本
    → ParsePanel 持有 rawText（本地 ref）
    → 点击识别 → api.parseAddressText(rawText)
-   → ParseResultVO → 转换为 ParsedItem[]（加 rowKey、可编辑字段）
-   → ParseResultTable 渲染（el-table + el-input 单元格）
-   → 用户逐格修改 / 勾选 / 删除行（全部在本地）
-   → 点击保存 → 校验本地表格（必填、格式）→ api.batchSaveAddresses(items)
+   → ParseResultVO → 转换为 ParsedRow[]（rowKey、原始值 original、isEdited=false）
+   → ParseResultTable 渲染（el-table + el-input 单元格；姓名输入按 Unicode 码点校验）
+   → 用户修改 → 与 original 比较派生 isEdited（恢复原值则为 false）
+   → 勾选/删除行（全部在本地）
+   → 点击保存 → 本地校验 → 保存确认弹窗（有效 N / 修改 M / 异常 K + 异常行号原因）
+   → 用户确认 → toPayload(row) 只投影业务字段 → api.batchSaveAddresses(items)
    → 成功：清空预览 + toast + 可选跳转列表
 ```
 
@@ -287,7 +299,11 @@ frontend/
 1. **解析结果只存在内存**，不写 `localStorage`（避免个人信息留存）。
 2. 预览表用 `rowKey = lineNo + index`，避免编辑时行错位。
 3. 表格中"状态"列实时反映当前值是否合法（前端校验与后端规则一致，但以后端为准）。
-4. 保存失败时保留预览内容，滚动定位到报错的 `lineNo`。
+4. **`isEdited` 是前端派生状态**：`ParsedRow` 保存 `original`（解析时的姓名/电话/地址快照），任一字段与 `original` 不同则 `isEdited=true`，恢复原值后自动回到 `false`；仅用于展示与确认统计（F-03）。
+5. **保存确认弹窗**必须显示：有效记录数、人工修改数（按 `isEdited` 统计）、异常记录数、将被跳过的异常行号与原因；用户确认后才发请求（F-03）。
+6. **提交投影**：`toPayload(row)` 只返回 `receiverName/phone/fullAddress/lineNo`；`isEdited`、`rowKey`、`original`、`rawLine`、`status`、`errors` 均不得进入 `POST /batch` 请求体。异常记录不允许进入请求；若强行提交，后端 400 整批拒绝（BR-18）。
+7. 保存失败时保留预览内容，滚动定位到报错的 `lineNo`；保存按钮在同一请求在途期间禁用，防重复提交。
+8. **批量删除（F-04）**：只允许勾选当前页；翻页时清空已选；确认框显示待删除数量；未选中时按钮禁用。
 
 ---
 
@@ -467,7 +483,10 @@ frontend/
 
 ```text
 Controller → AddressService.batchSave(items)  [@Transactional(rollbackFor = Exception.class)]
-   → 逐条 Bean Validation（失败抛 BusinessException → 全局异常处理器 → 400 + errors）
+   → 嵌套 Bean Validation（List<@NotNull @Valid AddressSaveDTO>）
+        · 普通字段错误 → 400/40001 + violations
+        · items 数量 >200（@Size 违规）→ 400/40003 + violations[field=items]
+   → Service 复核 items 非空/≤200/元素非 null（防绕过 Controller）
    → AddressMapper.insert × N
    → 提交；任一条异常 → 全部回滚
 ```
@@ -493,6 +512,7 @@ MVC 三要素在本项目中的落点：
 | 事务位置 | 只有 `AddressServiceImpl` 的写方法带 `@Transactional`，解析方法不带 |
 | 二次校验 | 保存服务不信任已解析结果，重新执行 Bean Validation |
 | 规范化归属 | 电话规范化只在 `parser` 的 `PhoneExtractor` 实现一次，保存服务复用同一工具类（不复制规则）；姓名/地址只 trim |
+| 无效行拦截 | 解析器只标记 `INVALID`；保存服务收到非法数据一律 400 整批拒绝，不静默丢弃（BR-18） |
 | 代码审查项 | 检查 `AddressController.parse` 调用链中不存在 `insert/update` |
 | 自动化断言 | 单测断言"解析服务无 Mapper 依赖"（反射检查字段类型）+ 接口测试断言"解析后总数不变" |
 
@@ -504,19 +524,22 @@ MVC 三要素在本项目中的落点：
 
 | 文件 | 是否入库 | 内容 |
 | --- | --- | --- |
-| `application.yml` | ✅ | 端口、数据源 URL、MyBatis-Plus 全局配置、Jackson、日志级别；口令用 `${DB_PASSWORD}` 占位 |
+| `application.yml` | ✅ | 端口、监听地址、数据源 URL、MyBatis-Plus 全局配置、Jackson、日志级别；口令用 `${DB_PASSWORD}` 占位 |
 | `application-local.yml` | ❌（`.gitignore`） | 本机数据库账号口令 |
-| `application-local.yml.example` | ✅ | 空口令模板 + 填写说明 |
+| `application-local.example.yml` | ✅ | root 模板（无真实口令），口令通过环境变量或本地文件提供 |
+| `.env` / `.env.local` | ❌（`.gitignore`） | 前端/脚本本地变量 |
+| `.env.example` | ✅ | 变量名示例，不含真实值 |
 
 ```yaml
 # application.yml（示意）
 server:
+  address: 127.0.0.1            # F-02：仅本机回环，禁止监听 0.0.0.0
   port: 8080
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/express_address_book?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:}
+    url: jdbc:mysql://127.0.0.1:3306/express_address_book?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${DB_USERNAME:root}     # 本机课程演示默认 root；口令无默认值
+    password: ${DB_PASSWORD}          # 必填，仅环境变量/application-local.yml
   config:
     import: optional:file:./application-local.yml
 mybatis-plus:
@@ -530,6 +553,18 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 ```
 
+`application-local.example.yml`（可提交的模板，不含真实口令）：
+
+```yaml
+# 复制为 application-local.yml 后填写；application-local.yml 已被 .gitignore 忽略
+spring:
+  datasource:
+    username: root
+    password: CHANGE_ME_LOCAL_ONLY
+```
+
+> 当前默认使用 root（本机课程演示）；`admin-init.sql` 的 `express_app` 仅作为可选最小权限方案，不执行不影响 root 运行。
+
 ### 10.2 日志规则
 
 | 规则 | 做法 |
@@ -537,7 +572,15 @@ mybatis-plus:
 | 不记录完整电话/地址 | `LogMasker.maskPhone()` → `136****0000`；`maskAddress()` → 前 6 字 + `...` |
 | 不记录请求体 | 拦截器/Controller 不打 `log.info(body)` |
 | SQL 日志 | 默认关闭；本地排错临时开启后必须关闭，且截图不得含参数字面量 |
-| 异常日志 | 服务端 `log.error` 带堆栈；返回体只给通用文案 |
+| 异常日志 | 服务端 `log.error` 带堆栈；返回体只给通用文案；`violations[].message` 不回显用户原始值 |
+
+### 10.3 访问边界（F-02）
+
+1. 后端 `server.address=127.0.0.1`，前端 `server.host='127.0.0.1'`，只允许本机访问。
+2. README、论文、答辩演示脚本均需写明："本系统无身份认证，仅供本机课程演示，不得暴露到公共网络或局域网。"
+3. **仅监听 localhost 是运行期缓解，不等于实现了身份认证**；不得在任何文档或论文中宣称"已通过 localhost 实现安全认证"。
+4. **数据库账号（本机演示）**：应用使用 root 连接 `127.0.0.1:3306/express_address_book`；口令只放环境变量或 `application-local.yml`；不得创建 `root@'%'`、不得开放远程登录、不得用于公共网络部署。`admin-init.sql` 的 `express_app` 仅作为可选最小权限方案。
+5. 验证方式：`netstat -ano | findstr :8080` 应只见 `127.0.0.1:8080`（或 `[::1]:8080`），不得出现 `0.0.0.0:8080`；MySQL 建议 `bind-address=127.0.0.1`。
 
 ---
 
@@ -545,7 +588,7 @@ mybatis-plus:
 
 | 操作 | 事务 | 说明 |
 | --- | --- | --- |
-| 批量保存 | `@Transactional(rollbackFor = Exception.class)` | 全部成功才提交 |
+| 批量保存 | `@Transactional(rollbackFor = Exception.class)` | 先嵌套校验；普通字段错误 40001，`items`>200 为 40003；全部合法才提交，一条不写 |
 | 批量删除 | 同上 | `ids` 去重后一次 `deleteBatchIds` |
 | 单条增删改 | 单语句，隐式事务 | 无需显式注解 |
 | 解析 | 无事务 | 不写库 |
@@ -553,7 +596,8 @@ mybatis-plus:
 注意点：
 1. `@Transactional` 必须落在 `public` 方法上，且由**外部**调用（避免同类自调用失效）。
 2. 事务方法内不要做耗时操作（解析已在前一个请求完成，天然分离）。
-3. 批量保存的分批插入（>200 条拒绝）保证单事务体量可控。
+3. 单次批量保存 ≤200 条，保证单事务体量可控。
+4. 批量保存不得"跳过非法项继续插"，否则违反 BR-18。
 
 ---
 
@@ -567,6 +611,13 @@ mybatis-plus:
 6. 业务页面不写行内样式做布局，统一样式文件与 class 命名（`wb-` 前缀仅用于实践页）。
 7. `/demo/**` 与 `/api/**` 严格分离，演示代码不进入业务 Service。
 8. 任何截图、日志、文档不得包含真实手机号与详细住址。
+9. 关键词查询必须先经 `LikeEscaper`（`!`→`!!`、`%`→`!%`、`_`→`!_`），SQL 使用 `ESCAPE '!'`，同一关键词只转义一次。
+10. 字段校验错误只使用 `data.violations[]`；解析行错误只使用 `items[].errors[]`，禁止同名混用。
+11. `isEdited` 只存在于前端状态；`toPayload()` 只投影 `receiverName/phone/fullAddress/lineNo`，不进入请求体、不进入数据库。
+12. 默认只监听 `127.0.0.1`；不得为图方便改成 `0.0.0.0`。
+13. 姓名长度统一 1～50 个 Unicode 码点：Parser `codePointCount`、Java `@CodePointLength(min=1,max=50)`、前端 `Array.from(value).length`、数据库 `VARCHAR(50)`；超 50 用 E111，1～50 内非法字符用 E106。**不要用 `String.length()`/HTML `maxlength` 作为唯一长度约束**。
+14. 本机课程演示使用 root 连接 `127.0.0.1:3306/express_address_book`；口令只通过环境变量或 `application-local.yml` 提供，不得写入 Git；不得创建 `root@'%'` 或开放远程登录；`express_app` 为可选最小权限方案。
+15. 批量保存数量：1～200；`items` 为空 → 40001，`items`>200 → 40003（`violations[].field=items`），普通字段错误 → 40001。
 
 ---
 
@@ -574,13 +625,15 @@ mybatis-plus:
 
 | 步骤 | 命令/操作 | 验证 |
 | --- | --- | --- |
-| 1 建库 | `mysql -u root -p < backend/src/main/resources/db/schema.sql` | `SHOW TABLES` 有 `express_address` |
-| 2 演示数据（可选） | `mysql -u root -p express_address_book < .../data.sql` | `SELECT COUNT(*)` = 3 |
-| 3 配置口令 | 复制 `application-local.yml.example` → `application-local.yml` | 不入 Git |
-| 4 启动后端 | `cd backend && mvn spring-boot:run` | `http://localhost:8080/api/addresses?page=1&size=10` 返回 `code:0` |
-| 5 启动前端 | `cd frontend && npm install && npm run dev` | `http://localhost:5173` 打开录入页 |
-| 6 联调 | 录入 → 识别 → 保存 → 列表 | 数据真正入库 |
-| 7 测试 | `mvn test`、`npm run build`、Playwright | 见 `test-plan.md` |
+| 1 建库 | 本机 root 执行：`mysql -u root -p < backend/src/main/resources/db/schema.sql` | `SHOW TABLES` 有 `express_address` |
+| 2 演示数据（可选） | 本机 root 执行：`mysql -u root -p express_address_book < .../data.sql` | `SELECT COUNT(*)` = 3 |
+| 3 配置口令 | 复制 `application-local.example.yml` → `application-local.yml`，填写本机 root 口令；或使用 `DB_USERNAME`/`DB_PASSWORD` 环境变量 | 不入 Git |
+| 4（可选）最小权限 | 需要时执行 `admin-init.sql` 创建 `express_app`；不执行则继续用 root | 非默认方案 |
+| 5 启动后端 | `cd backend && mvn spring-boot:run` | `http://127.0.0.1:8080/api/addresses?page=1&size=10` 返回 `code:0`；`netstat -ano \| findstr :8080` 仅见 `127.0.0.1:8080` |
+| 6 启动前端 | `cd frontend && npm install && npm run dev` | `http://127.0.0.1:5173` 打开录入页 |
+| 7 联调 | 录入 → 识别 → 修改 → 确认 → 保存 → 列表 | 数据真正入库 |
+| 8 测试 | `mvn test`、`npm run build`、Playwright | 见 `test-plan.md` |
+| 9 复现说明 | 按 `README.md` 从零执行一次 | 与本节步骤一致 |
 
 ---
 
@@ -588,7 +641,7 @@ mybatis-plus:
 
 | 技术 | 不引入理由 |
 | --- | --- |
-| Spring Security / JWT / Shiro | 无身份体系需求；引入即范围膨胀 |
+| Spring Security / JWT / Shiro | 无身份体系需求；引入即范围膨胀。运行期以"仅监听 127.0.0.1"缓解暴露风险，**这不等于认证** |
 | Redis / 缓存 | 数据量小，无热点；一致性更简单 |
 | 消息队列 | 无异步/削峰需求 |
 | Elasticsearch | 万级数据 `LIKE` 足够；见 `database-design.md` §4 |
@@ -614,6 +667,8 @@ mybatis-plus:
 | 论文截图与代码不一致 | 学术诚信问题 | 截图只从当前运行版本截取；改代码后重截 |
 | 前端代理未生效 | 请求 404/返回 HTML | 检查 `vite.config.ts` 的 `/api`、`/demo` 两条代理 |
 | 范围膨胀（注册登录、AI、导出） | 核心功能做不完 | 以 `requirements.md` §5.2 为界，一律记为 Backlog |
+| 服务误监听 `0.0.0.0`，同网段可读/删全部联系人 | 隐私与误删事故 | 固定 `server.address=127.0.0.1`；MS-10 用 `netstat` 复核；论文声明无认证 |
+| LIKE 关键词含 `%`/`_` 导致全表命中 | 搜索行为错误、误以为泄露 | `LikeEscaper` + `ESCAPE '!'`；TC-LIKE 与 TC-ADDR-046/047 覆盖 |
 
 ---
 
@@ -625,12 +680,18 @@ mybatis-plus:
 - [x] 字段名与 `database-design.md` §8 映射表一致
 - [x] 字段长度 50/20/255 在需求、数据库、API、前端三处一致
 - [x] 解析规则编号 PR-01～PR-13 与 `parser-design.md` 一致
-- [x] 行错误码 E102～E111 与 `parser-design.md` §5 一致
+- [x] 行错误码 E102～E108、E110、E111 与 `parser-design.md` §5 一致（E109 已删除）
 - [x] 页面路由与 `course-paper-outline.md` 的截图清单一致
 - [x] 2.1～2.19 小节名称与任务书附录3 **逐字一致**
 - [x] 2.20、2.21 与附录3 一致；2.22 明确不适用
-- [x] 测试用例前缀（TC-PARSE/TC-ADDR/TC-API/TC-WEB/TC-SERVLET/TC-E2E）与 `test-plan.md` 一致
+- [x] 测试用例前缀（TC-PARSE/TC-LIKE/TC-ADDR/TC-API/TC-WEB/TC-SERVLET/TC-E2E/TC-SEC）与 `test-plan.md` 一致
 - [x] 里程碑与 `development-roadmap.md` 一致
+- [x] 关键词转义、`violations`、`isEdited`、本机监听、命名约定在八份文档中一致
+- [x] 姓名 1～50 个 Unicode 码点、手机号 11 位/≤20、地址 ≤255、批量 1～200 在需求/数据库/API/Parser/前端/测试中一致
+- [x] 40001（字段校验）与 40003（数量/长度超限）职责已分离；201 条映射 40003
+- [x] 本机 root 账号与口令外置（环境变量/application-local.yml），未创建 `root@'%'`；`express_app` 为可选最小权限方案
+- [x] `isEdited` 只在前端，`toPayload()` 仅提交业务字段；Java DTO 无该字段
+- [x] `.gitignore` 与 `README.md` 已创建，且与本文 §10/§13 一致
 
 ---
 
@@ -639,3 +700,9 @@ mybatis-plus:
 | 版本 | 日期 | 变更 | 说明 |
 | --- | --- | --- | --- |
 | v1.0 | 2026-11-14 | 架构、模块、目录、Web 实践页、Servlet 演示方案定稿 | 第一阶段设计，未编写业务代码 |
+| v1.1 | 2026-11-14 | P0 修订：LikeEscaper/Violation、保存确认与 isEdited、当前页批删、本机监听、嵌套校验、控制器包调整、application-local 示例文件更名、.gitignore/README | 未编写业务代码 |
+| v1.1-final | 2026-11-14 | 第二轮审查遗留修复：姓名 1～50、`toPayload` 投影与 `original` 快照、201 条映射 40003、应用账号与初始化账号分离、配置示例去 root | 未编写业务代码 |
+| v1.1-final-ms01 | 2026-11-14 | MS-01 后按开发环境调整为 root 本机连接（口令外置）；`express_app` 降级为可选方案 | 仅配置/文档，无业务代码 |
+| v1.1-final-ms02.1 | 2026-11-14 | 解析 API、ParseInputGuard、CodePointLength、候选回退/包裹符/E108/英文地址/parse(null) 修复 | 95 个测试通过；无 CRUD |
+| v1.1-final-ms03 | 2026-11-14 | Entity/Mapper XML/AddressService/CRUD/批量/分页搜索；独立 MySQL 测试库 | 137 个测试通过；前端未开发 |
+| v1.1-final-ms03.1 | 2026-11-14 | 分页 JSON 类型、keyword 码点上限、page/size 字段映射；原始电话/全角姓名；API 事务回滚 | 146 个测试通过；MS-04 放行 |
