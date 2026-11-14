@@ -52,9 +52,9 @@ function isActive(target: string | undefined): boolean {
       </ul>
     </section>
 
-    <div class="wb-practice-nav__foot">
-      <span>Servlet 映射演示</span>
-      <PracticeStatus status="planned" />
-    </div>
+    <RouterLink class="wb-practice-nav__foot" to="/servlet-demo">
+      <span>2.20 Servlet 映射演示</span>
+      <PracticeStatus status="ready" />
+    </RouterLink>
   </nav>
 </template>

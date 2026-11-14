@@ -15,6 +15,25 @@ async function open(path) {
   await page.waitForTimeout(120)
 }
 
+async function setRange(testId, value) {
+  await page.getByTestId(testId).evaluate((element, nextValue) => {
+    const input = element
+    input.value = String(nextValue)
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    input.dispatchEvent(new Event('change', { bubbles: true }))
+  }, value)
+  await page.waitForTimeout(80)
+}
+
+async function gapBetween(firstTestId, secondTestId) {
+  return page.evaluate(([firstId, secondId]) => {
+    const first = document.querySelector(`[data-testid="${firstId}"]`)
+    const second = document.querySelector(`[data-testid="${secondId}"]`)
+    if (!first || !second) return Number.NaN
+    return second.getBoundingClientRect().top - first.getBoundingClientRect().bottom
+  }, [firstTestId, secondTestId])
+}
+
 async function noOverflow(label) {
   await page.waitForTimeout(80)
   const dimensions = await page.evaluate(() => ({
@@ -67,6 +86,21 @@ try {
     )
   }
 
+  // MS-06-R1: 2.2 real margin collapse and flex contrast.
+  await page.getByTestId('practice-link-2.2').click()
+  await page.waitForURL('**/web-basics#chapter-2.2')
+  await setRange('margin-bottom', 24)
+  await setRange('margin-top', 16)
+  const normalGap = await gapBetween('margin-normal-first', 'margin-normal-second')
+  assert.ok(Math.abs(normalGap - 24) < 1, `2.2 normal flow margin collapse: ${normalGap}`)
+  const contrastGap = await gapBetween('margin-contrast-first', 'margin-contrast-second')
+  assert.ok(Math.abs(contrastGap - 40) < 1, `2.2 flex contrast margins: ${contrastGap}`)
+  await setRange('margin-bottom', 16)
+  await setRange('margin-top', 32)
+  const normalGap2 = await gapBetween('margin-normal-first', 'margin-normal-second')
+  assert.ok(Math.abs(normalGap2 - 32) < 1, `2.2 second margin collapse: ${normalGap2}`)
+  await page.getByTestId('block-reset').click()
+
   // 2.18 is a real route with separate plan and implemented modes.
   await page.getByTestId('practice-link-2.18').click()
   await page.waitForURL('**/web-basics/wireframe')
@@ -100,10 +134,10 @@ try {
   await page.waitForTimeout(300)
   assert.equal(await page.getByTestId('fixed-probe').count(), 0)
 
-  // Servlet remains a non-route.
-  await open('/servlet-demo')
+  // Servlet demo is now a real route; unknown subpaths still use the app 404.
+  await open('/servlet-demo/not-a-real-route')
   await page.getByRole('heading', { name: '页面不存在' }).waitFor()
-  assert.equal(await page.locator('a[href="/servlet-demo"]').count(), 0)
+  assert.ok(await page.locator('a[href="/servlet-demo"]').count() >= 1)
 
   // Responsive: every in-page chapter and the independent 2.18 route.
   for (const width of [1366, 980, 760, 390]) {

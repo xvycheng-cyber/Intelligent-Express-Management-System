@@ -9,11 +9,13 @@ const activeMenu = computed(() => {
   if (route.path.startsWith('/import')) return 'import'
   if (route.path.startsWith('/addresses')) return 'addresses'
   if (route.path.startsWith('/web-basics')) return 'web-basics'
+  if (route.path.startsWith('/servlet-demo')) return 'servlet-demo'
   return ''
 })
 const pageTitle = computed(() => (route.meta.title as string | undefined) ?? '批量地址录入')
 const pageStage = computed(() => {
   if (route.path.startsWith('/web-basics')) return 'MS-06 · Web 基础实践'
+  if (route.path.startsWith('/servlet-demo')) return 'MS-07 · Servlet 映射演示'
   if (route.path.startsWith('/addresses')) return 'MS-05 · 地址簿管理'
   return 'MS-04 · 批量地址录入'
 })
@@ -72,11 +74,14 @@ onMounted(async () => {
           <AppIcon name="book" :size="18" />
           <span>Web 基础实践</span>
         </RouterLink>
-        <span class="side-nav__item is-disabled" aria-disabled="true" title="MS-07 实现，当前为规划入口">
+        <RouterLink
+          class="side-nav__item"
+          :class="{ 'is-active': activeMenu === 'servlet-demo' }"
+          to="/servlet-demo"
+        >
           <AppIcon name="route" :size="18" />
           <span>Servlet 映射演示</span>
-          <span class="side-nav__soon">待实现</span>
-        </span>
+        </RouterLink>
       </nav>
 
       <div class="sidebar__footer">

@@ -28,7 +28,7 @@ async function setRange(testId, value) {
 async function rect(testId, index = 0) {
   return page.getByTestId(testId).nth(index).evaluate((element) => {
     const box = element.getBoundingClientRect()
-    return { width: box.width, height: box.height, top: box.top, left: box.left, right: box.right }
+    return { width: box.width, height: box.height, top: box.top, bottom: box.bottom, left: box.left, right: box.right }
   })
 }
 
@@ -64,7 +64,7 @@ try {
   assert.equal(await page.getByTestId('chapter-2.6').locator('.wb-status').innerText(), '已实现')
   assert.equal(await page.getByTestId('chapter-2.18').locator('.wb-status').innerText(), '已实现')
   assert.equal(await page.getByTestId('chapter-2.18').locator('.wb-status').innerText(), '已实现')
-  assert.equal(await page.locator('.wb-practice-nav__foot .wb-status').innerText(), '待实现')
+  assert.equal(await page.locator('.wb-practice-nav__foot .wb-status').innerText(), '已实现')
 
   for (const chapter of ['2.1', '2.2', '2.3', '2.4', '2.5']) {
     assert.equal(await page.getByTestId(`practice-link-${chapter}`).count(), 1)
@@ -104,6 +104,45 @@ try {
   assert.equal(await computed('block-item', 'display'), 'block')
   const resetBlock = await rect('block-item')
   assert.ok(resetBlock.width > 300, 'block reset did not restore auto width')
+
+  // 2.2: real adjacent vertical margin collapse with a flex contrast.
+  const adjacency = await page.getByTestId('margin-normal-first').evaluate((first) => {
+    return first.nextElementSibling?.getAttribute('data-testid') ?? null
+  })
+  assert.equal(adjacency, 'margin-normal-second', 'normal flow blocks are not adjacent')
+  assert.equal(await computed('margin-normal-stage', 'display'), 'block')
+  assert.equal(await computed('margin-contrast-stage', 'display'), 'flex')
+  await setRange('margin-bottom', 24)
+  await setRange('margin-top', 16)
+  const normal24 = await rect('margin-normal-first')
+  const normal24Next = await rect('margin-normal-second')
+  const normalGap24 = normal24Next.top - normal24.bottom
+  assert.ok(Math.abs(normalGap24 - 24) < 1, `normal margin collapse: ${normalGap24}`)
+  const contrast24 = await rect('margin-contrast-first')
+  const contrast24Next = await rect('margin-contrast-second')
+  const contrastGap24 = contrast24Next.top - contrast24.bottom
+  assert.ok(Math.abs(contrastGap24 - 40) < 1, `flex margin contrast: ${contrastGap24}`)
+  assert.equal(await page.getByTestId('margin-expected-normal').innerText(), '24px')
+  assert.equal(await page.getByTestId('margin-expected-contrast').innerText(), '40px')
+
+  await setRange('margin-bottom', 16)
+  await setRange('margin-top', 32)
+  const normal32 = await rect('margin-normal-first')
+  const normal32Next = await rect('margin-normal-second')
+  const normalGap32 = normal32Next.top - normal32.bottom
+  assert.ok(Math.abs(normalGap32 - 32) < 1, `normal margin collapse second case: ${normalGap32}`)
+  const contrast32 = await rect('margin-contrast-first')
+  const contrast32Next = await rect('margin-contrast-second')
+  const contrastGap32 = contrast32Next.top - contrast32.bottom
+  assert.ok(Math.abs(contrastGap32 - 48) < 1, `flex margin contrast second case: ${contrastGap32}`)
+  assert.match(await page.getByTestId('demo-section-2.2').locator('.wb-code code').innerText(), /margin-top: 32px/)
+  assert.match(await page.getByTestId('demo-section-2.2').locator('.wb-code code').innerText(), /display: flex/)
+  await page.getByTestId('block-reset').click()
+  const resetMargin = await rect('margin-normal-first')
+  const resetMarginNext = await rect('margin-normal-second')
+  assert.ok(Math.abs((resetMarginNext.top - resetMargin.bottom) - 24) < 1, 'margin collapse reset failed')
+  assert.equal(await page.getByTestId('margin-bottom').inputValue(), '24')
+  assert.equal(await page.getByTestId('margin-top').inputValue(), '16')
 
   // 2.3 inline-block: width/height, whitespace gap, native wrap and inline compare.
   assert.equal(await computed('inline-block-item', 'display'), 'inline-block')

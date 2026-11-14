@@ -38,7 +38,7 @@
 | 编号 | 课程原文标题 | 实现组件 | 测试脚本 | 截图 | 证据报告 | 状态 |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2.1 | 行内显示类型 | InlineDemo | ms06-3、ms06-9 | 2-01 | ms-06.3 | 完成 |
-| 2.2 | 区块显示类型 | BlockDemo | ms06-3、ms06-9 | 2-02 | ms-06.3 | 完成 |
+| 2.2 | 区块显示类型 | BlockDemo + 相邻 margin collapse 对照 | ms06-3、ms06-9 | 2-02 | ms-06.3 | 完成 |
 | 2.3 | 行内区块显示类型 | InlineBlockDemo | ms06-3、ms06-9 | 2-03 | ms-06.3 | 完成 |
 | 2.4 | 弹性显示类型 | FlexDemo | ms06-3、ms06-9 | 2-04 | ms-06.3 | 完成 |
 | 2.5 | 网格显示类型 | GridDemo | ms06-3、ms06-9 | 2-05 | ms-06.3 | 完成 |
@@ -167,7 +167,7 @@ frontend/src/components/basics/LayoutPrinciplesDemo.vue
 ```text
 npm run build
 vue-tsc --noEmit + vite build
-✓ built in 5.91s
+✓ built in 5.24s
 exit code: 0
 ```
 
@@ -226,6 +226,17 @@ BUILD SUCCESS
 
 ---
 
+### 6.1 MS-06-R1 整改后的 2.2 证据
+
+正式审查后追加：
+
+- `BlockDemo.vue` 增加正常文档流 block 相邻 margin collapse 实验；
+- `flex` 对照展示不折叠时 margin 相加；
+- 24/16 → 实际 24px；16/32 → 实际 32px；flex 对照 40/48px；
+- `ms06-3`、`ms06-9` 增加真实 rect 断言；
+- `2-02-block.png` 已重新生成（784×1781）；
+- 1366/980/760/390 集成回归通过。
+
 ## 7. MS04 / MS05 回归结果
 
 ```text
@@ -244,7 +255,7 @@ MS05_BROWSER_OK
 
 ## 8. 构建结果
 
-- 前端构建成功（5.91s）；
+- 前端构建成功（5.24s）；
 - 后端 146 测试成功；
 - `git diff --check` 通过；
 - 既有 Sass/大 chunk 警告未新增处理，避免无关重构。

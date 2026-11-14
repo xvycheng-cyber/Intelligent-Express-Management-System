@@ -254,6 +254,11 @@
   border-top: 1px solid var(--color-border);
   color: var(--color-text-muted);
   font-size: 11px;
+  text-decoration: none;
+}
+
+.wb-practice-nav__foot:hover {
+  color: var(--color-primary-strong);
 }
 
 /* Status labels */
@@ -1000,6 +1005,99 @@
   color: #1e3a5f;
   font-size: 12px;
   line-height: 1.5;
+}
+
+/* 2.2 adjacent vertical margin collapse */
+
+.wb-margin-lab {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #dbe5ef;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.wb-margin-lab__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.wb-margin-lab__head h4 {
+  margin: 2px 0 0;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.wb-margin-lab__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.wb-margin-lab__panel {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: var(--color-surface);
+}
+
+.wb-margin-lab__panel h5 {
+  margin: 0 0 8px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.wb-margin-normal,
+.wb-margin-contrast {
+  padding: 12px;
+  border: 1px dashed #94a3b8;
+  background: #f8fafc;
+}
+
+.wb-margin-normal {
+  display: block;
+}
+
+.wb-margin-contrast {
+  display: flex;
+  flex-direction: column;
+}
+
+.wb-margin-box {
+  box-sizing: border-box;
+  display: block;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #93c5fd;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1e3a5f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.wb-margin-box small {
+  color: #475569;
+  font-size: 10px;
+}
+
+.wb-margin-lab__result {
+  margin: 9px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.wb-margin-lab__result strong {
+  color: var(--color-primary-strong);
+  font-size: 11px;
 }
 
 /* 2.3 inline-block */
@@ -2395,6 +2493,10 @@
   }
 
   .wb-relative-demo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wb-margin-lab__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 

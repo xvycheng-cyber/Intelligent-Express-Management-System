@@ -188,9 +188,9 @@ styles/         设计 token 与 Element Plus 覆盖
 | `/` | 重定向 `/import` | 已实现 |
 | `/import` | `ImportView` | 已实现 |
 | `/addresses` | `AddressListView` | 已实现（MS-05，代码未提交） |
-| `/web-basics` | 设计存在，代码不存在 | 未实现（MS-06） |
-| `/web-basics/wireframe` | 设计存在，代码不存在 | 未实现（MS-06） |
-| `/servlet-demo` | 设计存在，代码不存在 | 未实现（MS-07） |
+| `/web-basics` | `WebBasicsView` | 已实现（MS-06） |
+| `/web-basics/wireframe` | `WireframeView` | 已实现（MS-06） |
+| `/servlet-demo` | `ServletDemoView` | 已实现（MS-07.5） |
 | 其他 | `NotFoundView` | 已实现 |
 
 ### 5.3 解析与保存分离

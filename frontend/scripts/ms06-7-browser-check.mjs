@@ -72,10 +72,10 @@ try {
   assert.equal(await page.getByTestId('wireframe-plan-panel').count(), 1)
   assert.equal(await page.getByTestId('wireframe-plan-board').count(), 1)
 
-  // Servlet remains a non-route; no fake page was created.
-  await open('/servlet-demo')
+  // Servlet demo is now a real route; unknown subpaths still use the app 404.
+  await open('/servlet-demo/not-a-real-route')
   await page.getByRole('heading', { name: '页面不存在' }).waitFor()
-  assert.equal(await page.locator('a[href="/servlet-demo"]').count(), 0)
+  assert.ok(await page.locator('a[href="/servlet-demo"]').count() >= 1)
 
   // Responsive: page shell no overflow; live previews remain reachable.
   for (const width of [1366, 980, 760, 390]) {

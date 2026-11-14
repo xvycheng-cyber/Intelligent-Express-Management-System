@@ -34,15 +34,15 @@ try {
   assert.equal(await page.locator('.wb-page__heading h1').innerText(), 'Web 基础实践')
   assert.equal(await page.locator('.wb-chapter').count(), 19)
   assert.equal(await page.getByTestId('practice-nav').count(), 1)
-  assert.equal(await page.locator('.wb-practice-nav__foot').innerText(), 'Servlet 映射演示\n待实现')
+  assert.equal(await page.locator('.wb-practice-nav__foot').innerText(), '2.20 Servlet 映射演示\n已实现')
   assert.equal(
     await page.locator('nav[aria-label="课程实践导航"] .side-nav__item.is-active').innerText(),
     'Web 基础实践'
   )
   assert.equal(await page.getByTestId('chapter-2.18').count(), 1)
   assert.match(await page.getByTestId('chapter-2.18').innerText(), /快递通系统原创线框|原创线框/)
-  assert.equal(await page.locator('.side-nav__item.is-disabled').filter({ hasText: 'Servlet' }).count(), 1)
-  assert.equal(await page.locator('a[href="/servlet-demo"]').count(), 0)
+  assert.equal(await page.locator('.side-nav__item.is-disabled').filter({ hasText: 'Servlet' }).count(), 0)
+  assert.ok(await page.locator('a[href="/servlet-demo"]').count() >= 1)
 
   // 2) 2.18 entry and two distinct modes
   await page.getByTestId('chapter-2.18').click()
@@ -71,8 +71,8 @@ try {
   await open('/web-basics/wireframe?mode=plan')
   assert.equal(await page.getByTestId('wireframe-plan-panel').count(), 1)
 
-  // 4) Servlet route must not exist yet.
-  await open('/servlet-demo')
+  // 4) Servlet demo is a real route; an unknown subpath is still the app 404.
+  await open('/servlet-demo/not-a-real-route')
   await page.getByRole('heading', { name: '页面不存在' }).waitFor()
 
   // 5) Business page regression at desktop.

@@ -5,9 +5,34 @@
 > 审计方式：读取源码/测试/文档/Git + 复核已有报告。**本次审计没有修改业务代码、数据库结构或业务数据；没有重新执行 Maven 测试/Playwright。**
 > 所有“测试通过”均来自已有报告或源码中的测试定义；本文件的“未验证”不代表失败。
 
+> **MS-07.5 状态更新（2026-11-14）**：本文件 §1～§8 保留为 MS-05 时期审计快照；当前状态已变化，以下 §0 为准。历史 NOT_STARTED 不再代表当前事实。
+
 ---
 
-## 1. 当前开发位置
+## 0. 当前状态（MS-07.5，2026-11-14）
+
+| 里程碑 | 当前状态 | 证据 |
+| --- | --- | --- |
+| MS-06 Web 实践页 | TESTED | 2.1～2.19；MS06.2～MS06.9 浏览器回归；`2-01`～`2-19` 截图 |
+| MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；158 后端测试；`2-20-*` 截图 |
+| MS-08 全量测试 | PARTIAL | MS06/MS07/MS04/MS05 已执行；尚未正式汇总/CI |
+| MS-09 论文/截图 | NOT_STARTED | 仅论文大纲 |
+| MS-10 验收/答辩 | NOT_STARTED | 未开始 |
+
+当前实现事实：
+
+```text
+前端：/servlet-demo 可用，导航 active；真实 fetch /demo/**
+后端：/demo/servlet/exact、/demo/servlet/*、*.smap、/demo/spring/*
+测试：TC-SERVLET-01～013 PASS；Maven 158 PASS；MS04/MS05/MS06 回归 PASS
+截图：docs/screenshots/2-20-servlet-mapping*.png
+```
+
+历史审计中 `MS-06 NOT_STARTED`、`MS-07 NOT_STARTED`、`/servlet-demo 不存在` 等表述不再适用于当前工作区；保留原文是为了保留审计历史。
+
+---
+
+## 1. 当前开发位置（历史快照）
 
 ```text
 MS-00 设计基线        ACCEPTED（设计文档冻结）

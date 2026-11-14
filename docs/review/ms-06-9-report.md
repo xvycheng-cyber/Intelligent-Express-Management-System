@@ -255,3 +255,28 @@ MS-06.10 应做：
 - 最终验收记录。
 
 **本阶段停止，不进入 MS-06.10，等待负责人/ChatGPT 审核。**
+
+---
+
+## 11. MS-06-R1 整改追加（2026-11-14）
+
+正式审查指出 2.2 margin collapse 缺口后，已增加真实正常流/flex 对照实验，并更新集成测试。
+
+```text
+node scripts/ms06-9-browser-check.mjs
+MS06_9_BROWSER_OK
+```
+
+追加验证：
+
+- 2.2 两个正常流 block 直接相邻，computed `display:block`；
+- margin-bottom 24 + margin-top 16 → 实际 24；
+- margin-bottom 16 + margin-top 32 → 实际 32；
+- flex 对照 → 40/48；
+- 动态代码同步；
+- block reset 恢复 24/16 并重新测量；
+- 1366/980/760/390 无页面级横向溢出；
+- 控制台无新增错误；
+- MS06.2～MS06.8、MS04/MS05 回归通过。
+
+本追加覆盖旧文“2.2 无缺口”的不足；正式审查历史记录不修改。

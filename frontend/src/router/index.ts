@@ -32,6 +32,12 @@ const router = createRouter({
       meta: { title: '快递通系统原创线框设计' }
     },
     {
+      path: '/servlet-demo',
+      name: 'servlet-demo',
+      component: () => import('@/views/ServletDemoView.vue'),
+      meta: { title: 'Servlet 映射演示' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),

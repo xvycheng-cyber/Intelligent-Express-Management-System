@@ -158,7 +158,7 @@ AppLayout
 | 编号 | 课程原文标题 | 项目实现依据 | 实际演示内容 | 交互操作 | 预期现象 | 关键代码 | 截图文件 | 验收标准 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2.1 | 行内显示类型 | 原文标题 + architecture §6.2 | 段落内 `<span>` 设置 width/height/margin/padding/border；旁边保留普通行内文字 | 点击“显示辅助线”/“增加上下 padding”切换；不改变核心 CSS | width/height 被忽略；上下 margin 不生效；上下 padding/border 与相邻行重叠；左右 padding/margin/border 推开文字 | `DisplayTypeDemo.vue`，`.wb-inline` | `2-01-inline.png` | 能观察到 inline 的宽高无效、上下间距不推开行、左右有效 |
-| 2.2 | 区块显示类型 | 原文标题 + architecture §6.2 | 两个 `<div>` 独占行、撑满父容器；`margin:0 auto` 居中；相邻块 margin 折叠 | 切换宽度/是否居中；显示 margin 辅助线 | 块独占一行；width 生效；auto 居中；上下 margin 折叠取大值 | `DisplayTypeDemo.vue`，`.wb-block` | `2-02-block.png` | 能观察到块级换行、宽度、居中、margin 折叠 |
+| 2.2 | 区块显示类型 | 原文标题 + architecture §6.2 | 两个 `<div>` 独占行、撑满父容器；`margin:0 auto` 居中；独立相邻 block margin collapse 实验 | 切换宽度/是否居中；独立 margin-bottom/margin-top 滑块；flex 对照 | 块独占一行；width 生效；auto 居中；正常流间距取 max，flex 对照为相加 | `BlockDemo.vue`，`.wb-block-demo__item`、`.wb-margin-*` | `2-02-block.png` | 能观察到块级换行、宽度、居中、真实 margin collapse 与 flex 对照 |
 | 2.3 | 行内区块显示类型 | 原文标题 + architecture §6.2 | 多个 inline-block 盒子同行；元素间空白产生间隙；vertical-align 改变基线 | 切换 HTML 空白/`vertical-align` | width/height 生效且不换行；空白产生约 4px 间隙；vertical-align 可见 | `DisplayTypeDemo.vue`，`.wb-inline-block` | `2-03-inline-block.png` | 能观察到 inline-block 尺寸生效、空白间隙、垂直对齐差异 |
 | 2.4 | 弹性显示类型 | 原文标题 + architecture §6.2 | flex 主轴/交叉轴；justify-content 多值；flex:1；gap 与 margin | 按钮切换 justify-content；切换 gap/margin；切换 flex:1 | 主轴分布变化；flex:1 等分；gap 与 margin 表现不同 | `FlexGridDemo.vue`，`.wb-flex` | `2-04-flex.png` | 能观察到 5 种 justify-content、flex:1、gap/margin 差异 |
 | 2.5 | 网格显示类型 | 原文标题 + architecture §6.2 | 3 列 grid；`grid-column:span 2`；gap；Flex 对比 | 切换 span；切换 Flex/Grid 对比 | 二维网格成立；跨列生效；gap 间隔一致 | `FlexGridDemo.vue`，`.wb-grid` | `2-05-grid.png` | 能观察到 grid 二维布局、span、gap 与 Flex 一维差异 |
@@ -204,7 +204,7 @@ AppLayout
 | 2.17 | TESTED | `OffsetConflictDemo.vue`、截图 `2-17-offset-override.png`；补充 `StackingContextDemo.vue`/`2-17-stacking.png` |
 | 2.18 | TESTED | `WireframeView.vue` 原创 plan 线框 + 真实 implemented 页面；截图 `2-18-wireframe-plan.png`、`2-18-implemented.png` |
 | 2.19 | TESTED | `LayoutPrinciplesDemo.vue` 真实 AppLayout 高亮/响应式测量；截图 `2-19-principles.png` |
-| 2.20 | OUT_OF_SCOPE（MS-07） | 仅规划入口，待实现 |
+| 2.20 | TESTED（MS-07.5） | 3 个真实 `@WebServlet`、Spring MVC 对照、`/servlet-demo`；TC-SERVLET-01～013 |
 | 2.21 | OUT_OF_SCOPE（系统/论文） | 由业务实现与 MS-09 负责 |
 | 2.22 | NOT_APPLICABLE | 任务（二），本项目不采用 |
 
@@ -215,7 +215,7 @@ AppLayout
 | 编号 | 课程原文标题 | 实现页面 / Vue 组件 | 关键 CSS | 测试脚本 | 截图 | 证据报告 | 状态 | 遗留/说明 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2.1 | 行内显示类型 | `/web-basics#chapter-2.1` / `InlineDemo.vue` | inline、padding/border/margin、width/height | ms06-3、ms06-9 | `2-01-inline.png` | ms-06.3 | 已测试 | — |
-| 2.2 | 区块显示类型 | `#chapter-2.2` / `BlockDemo.vue` | block、width auto、margin auto | ms06-3、ms06-9 | `2-02-block.png` | ms-06.3 | 已测试 | — |
+| 2.2 | 区块显示类型 | `#chapter-2.2` / `BlockDemo.vue` | block、width auto、margin auto、相邻垂直 margin collapse | ms06-3、ms06-9 | `2-02-block.png` | ms-06.3 | 已测试 | R1 已补真实折叠/flex 对照 |
 | 2.3 | 行内区块显示类型 | `#chapter-2.3` / `InlineBlockDemo.vue` | inline-block、空白、原生换行 | ms06-3、ms06-9 | `2-03-inline-block.png` | ms-06.3 | 已测试 | — |
 | 2.4 | 弹性显示类型 | `#chapter-2.4` / `FlexDemo.vue` | flex、direction、justify、align、wrap、gap | ms06-3、ms06-9 | `2-04-flex.png` | ms-06.3 | 已测试 | — |
 | 2.5 | 网格显示类型 | `#chapter-2.5` / `GridDemo.vue` | grid、fr、gap、span | ms06-3、ms06-9 | `2-05-grid.png` | ms-06.3 | 已测试 | — |
