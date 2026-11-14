@@ -342,24 +342,26 @@ frontend/
 | 2.15 粘性约束矩形 | sticky 元素只在父容器（约束矩形）内生效：父容器高度不足时被"推走"；演示同一 sticky 在不同高度父容器中的差异 | `FixedStickyDemo` | `2-15-sticky-rect.png` |
 | 2.16 定位属性上下左右 | 分别只用 `top` / `right` / `bottom` / `left`；四项同时设置且 `width:auto` 时的拉伸；`static` 下全部无效 | `OffsetConflictDemo` | `2-16-offsets.png` |
 | 2.17 定位属性之间的覆盖影响 | 绝对定位同时设 `left+right`：`width:auto` 拉伸 / `width` 固定时 `left` 生效、`right` 被忽略；`top+bottom` 同理；相对定位同时 `left+right` 时 `left` 生效；`margin:auto` 居中 | `OffsetConflictDemo` | `2-17-offset-override.png` |
-| 2.18 使用线框风格仿制XXX网页的布局 | 按附录4（湖北工程学院新技术学院首页）区域划分：Logo 区、顶部工具条、主导航、大幅 Banner、学校要闻（左大图 + 右列表）、底部信息；全部用灰块 + 红色边框表示，无真实图片 | `WireframeView` | `2-18-original.png`、`2-18-wireframe-plan.png`、`2-18-implemented.png` |
+| 2.18 使用线框风格仿制XXX网页的布局 | **项目负责人批准的替代实现**：不再仿制外部网页，改为用低保真线框展示**快递通自身**的真实页面布局：系统框架、智能录入页、地址簿页、导航关系；灰块/细边框/文字标注，无外部 Logo/Banner/图片/字体 | `WireframeView` | `2-18-wireframe-plan.png`、`2-18-implemented.png` |
 | 2.19 布局原则思考 | 容器与区域划分、栅格与间距系统、盒模型统一（全局 `border-box`）、避免用绝对定位做主布局、层级 `z-index` 管理、可维护性（命名/组件化）、响应式取舍；逐条对照本系统真实布局 | `LayoutPrinciples` | `2-19-principles.png` |
 
-### 6.3 2.18 线框仿制的实现方案
+### 6.3 2.18 原创系统线框图实现方案
+
+> **范围调整（2026-11-14，项目负责人批准）**：课程任务书原文标题仍为“使用线框风格仿制XXX网页的布局”，附录4 给出外部学校首页参考图。项目最终**不仿制外部网页**，改用本系统自身的真实页面作为设计对象；不得在论文/验收中宣称完全按原文完成了外部网页仿制。详见 `docs/review/ms-06-scope-adjustment.md`。
 
 | 项 | 方案 |
 | --- | --- |
-| 布局骨架 | 外层 `display: grid`：`grid-template-rows: auto auto 320px auto auto`；要闻区 `grid-template-columns: 1.15fr 1fr` |
-| 内部对齐 | 导航与列表用 `flex`（`justify-content: space-between` / `align-items: center`） |
-| 线框风格 | 所有区域 `border: 1px solid #e53935`，灰块 `background: #e0e0e0`，无圆角无阴影，文字用区域名标注 |
-| 与真实页面差异 | 图片一律用灰块占位；不引入任何外部图片/字体，避免版权与网络依赖 |
-| 证据链 | `2-18-original.png`（原网页，来源已在任务书附录4 给出）+ `2-18-wireframe-plan.png`（本项目的线框稿）+ `2-18-implemented.png`（运行截图） |
-
-> 三张图缺一不可，且必须是**真实截图**；不得用任务书里的图冒充"实现效果"。
+| 设计对象 | 本系统真实页面：`AppLayout`、`ImportView`、`AddressListView`、导航关系；不引入外部网页内容 |
+| 布局骨架 | 线框画板：A. 系统框架（顶部栏/左侧导航/主内容/页面标题与操作区）；B. 智能录入页（文本输入/解析操作/预览/确认保存）；C. 地址簿页（搜索/列表/操作/分页）；D. 导航关系（智能录入/地址簿/Web 基础实践/Servlet 映射演示，后两者标注规划态） |
+| 线框风格 | 灰阶低保真：`#f1f5f9`/`#e2e8f0` 占位块、细边框、文字区域名；无真实图片、无 Logo、无业务数据；不使用外部字体 |
+| 与实现的关系 | `2-18-wireframe-plan.png` 为线框设计板；`2-18-implemented.png` 为 `/web-basics/wireframe` 的真实浏览器截图，不用代码绘制图冒充 |
+| 证据链 | 仅两张：`2-18-wireframe-plan.png`（原创线框设计）+ `2-18-implemented.png`（真实浏览器运行）；**取消** `2-18-original.png` |
+| 不虚构 | 导航中的 Web 基础实践/Servlet 映射演示在 MS-06/07 实现前必须标注“规划/待实现”，不得画成已可用业务功能 |
 
 ### 6.4 截图与论文的衔接
 
 - 所有截图统一存 `docs/screenshots/`，命名 `2-xx-名称.png`，与上表一致。
+- **2.18 只保留 `2-18-wireframe-plan.png` 与 `2-18-implemented.png`；取消 `2-18-original.png`，不采集外部网站截图。**
 - `CodeBlock` 展示的代码必须与仓库中的真实源码一致（复制自源码，不手写伪代码）。
 - 论文 2.x.1 的"观察结论"文字可从本页"观察结论"块直接提炼，但必须以**本机实际运行现象**为准；如浏览器差异导致现象不同，论文需如实说明浏览器与版本。
 
@@ -706,3 +708,4 @@ spring:
 | v1.1-final-ms02.1 | 2026-11-14 | 解析 API、ParseInputGuard、CodePointLength、候选回退/包裹符/E108/英文地址/parse(null) 修复 | 95 个测试通过；无 CRUD |
 | v1.1-final-ms03 | 2026-11-14 | Entity/Mapper XML/AddressService/CRUD/批量/分页搜索；独立 MySQL 测试库 | 137 个测试通过；前端未开发 |
 | v1.1-final-ms03.1 | 2026-11-14 | 分页 JSON 类型、keyword 码点上限、page/size 字段映射；原始电话/全角姓名；API 事务回滚 | 146 个测试通过；MS-04 放行 |
+| v1.1-final-ms06.1 | 2026-11-14 | 2.18 经项目负责人批准改为本系统原创线框；取消外部网页仿制/原网页截图；保留两张截图；补充 MS-06 实施依据 | 仅设计调整；未开发页面 |
