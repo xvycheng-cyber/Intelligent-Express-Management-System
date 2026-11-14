@@ -8,12 +8,15 @@ const route = useRoute()
 const activeMenu = computed(() => {
   if (route.path.startsWith('/import')) return 'import'
   if (route.path.startsWith('/addresses')) return 'addresses'
+  if (route.path.startsWith('/web-basics')) return 'web-basics'
   return ''
 })
 const pageTitle = computed(() => (route.meta.title as string | undefined) ?? '批量地址录入')
-const pageStage = computed(() =>
-  route.path.startsWith('/addresses') ? 'MS-05 · 地址簿管理' : 'MS-04 · 批量地址录入'
-)
+const pageStage = computed(() => {
+  if (route.path.startsWith('/web-basics')) return 'MS-06 · Web 基础实践'
+  if (route.path.startsWith('/addresses')) return 'MS-05 · 地址簿管理'
+  return 'MS-04 · 批量地址录入'
+})
 const backendState = ref<'checking' | 'up' | 'down'>('checking')
 
 onMounted(async () => {
@@ -57,6 +60,23 @@ onMounted(async () => {
           <AppIcon name="list" :size="18" />
           <span>地址簿管理</span>
         </RouterLink>
+      </nav>
+
+      <div class="sidebar__section-label sidebar__section-label--spaced">课程实践</div>
+      <nav class="side-nav side-nav--practice" aria-label="课程实践导航">
+        <RouterLink
+          class="side-nav__item"
+          :class="{ 'is-active': activeMenu === 'web-basics' }"
+          to="/web-basics"
+        >
+          <AppIcon name="book" :size="18" />
+          <span>Web 基础实践</span>
+        </RouterLink>
+        <span class="side-nav__item is-disabled" aria-disabled="true" title="MS-07 实现，当前为规划入口">
+          <AppIcon name="route" :size="18" />
+          <span>Servlet 映射演示</span>
+          <span class="side-nav__soon">待实现</span>
+        </span>
       </nav>
 
       <div class="sidebar__footer">
@@ -175,6 +195,10 @@ onMounted(async () => {
   color: #7893ad;
   font-size: 11px;
   letter-spacing: 0.12em;
+
+  &--spaced {
+    margin-top: 24px;
+  }
 }
 
 .side-nav {
@@ -367,6 +391,10 @@ onMounted(async () => {
   .side-nav {
     flex-direction: row;
     overflow-x: auto;
+  }
+
+  .side-nav--practice {
+    margin-top: 8px;
   }
 
   .side-nav__item {

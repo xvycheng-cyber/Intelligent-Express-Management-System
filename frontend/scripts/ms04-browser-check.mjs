@@ -32,7 +32,7 @@ async function parse(text) {
 try {
   await page.goto(`${BASE}/import`, { waitUntil: 'networkidle' })
   await page.getByRole('heading', { name: '批量录入收件地址' }).waitFor()
-  assert.equal(await page.locator('.side-nav__item').count(), 2)
+  assert.equal(await page.locator('nav[aria-label="主导航"] .side-nav__item').count(), 2)
   assert.equal(await page.getByTestId('empty-state').count(), 1)
 
   // 1) 单条联系人 + 中文逗号

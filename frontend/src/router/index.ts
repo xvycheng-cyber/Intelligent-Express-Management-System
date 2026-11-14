@@ -20,13 +20,31 @@ const router = createRouter({
       meta: { title: '地址簿管理' }
     },
     {
+      path: '/web-basics',
+      name: 'web-basics',
+      component: () => import('@/views/WebBasicsView.vue'),
+      meta: { title: 'Web 基础实践' }
+    },
+    {
+      path: '/web-basics/wireframe',
+      name: 'web-basics-wireframe',
+      component: () => import('@/views/WireframeView.vue'),
+      meta: { title: '快递通系统原创线框设计' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),
       meta: { title: '页面不存在' }
     }
   ],
-  scrollBehavior: () => ({ top: 0 })
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) return savedPosition
+    if (to.hash) {
+      return { el: to.hash, top: 24, behavior: 'smooth' }
+    }
+    return { top: 0 }
+  }
 })
 
 router.afterEach((to) => {

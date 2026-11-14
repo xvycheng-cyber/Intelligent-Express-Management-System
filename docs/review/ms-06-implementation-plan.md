@@ -185,6 +185,55 @@ AppLayout
 | `2-18-implemented.png` | `/web-basics/wireframe` 运行截图 | 真实浏览器；与 plan 区域一致；无外部素材 |
 | `2-18-original.png` | **取消** | 不生成、不采集外部网页 |
 
+### 3.2 当前实现状态（2026-11-14，MS-06.8 更新）
+
+| 编号 | 当前状态 | 证据/说明 |
+| --- | --- | --- |
+| 2.1～2.5 | TESTED | MS-06.3 五个显示类型组件、浏览器测试、截图 |
+| 2.6 | TESTED | `BoxModelDemo.vue`、截图 `2-06-box-parts.png` |
+| 2.7 | TESTED | `BoxSizingDemo.vue`（content-box）、截图 `2-07-content-box.png` |
+| 2.8 | TESTED | `BoxSizingDemo.vue`（border-box）、截图 `2-08-border-box.png` |
+| 2.9 | TESTED | `NormalFlowDemo.vue`、截图 `2-09-normal-flow.png` |
+| 2.10 | TESTED | `RelativePositionDemo.vue`、截图 `2-10-relative.png` |
+| 2.11 | TESTED | `AbsolutePositionDemo.vue`、截图 `2-11-absolute.png` |
+| 2.12 | TESTED | `PositioningContextDemo.vue`、截图 `2-12-absolute-context.png` |
+| 2.13 | TESTED | `FixedPositionDemo.vue`、截图 `2-13-fixed.png` |
+| 2.14 | TESTED | `StickyPositionDemo.vue`、截图 `2-14-sticky.png` |
+| 2.15 | TESTED | `StickyConstraintDemo.vue`、截图 `2-15-sticky-rect.png`；补充五定位方式对比表 |
+| 2.16 | TESTED | `OffsetPropertiesDemo.vue`、截图 `2-16-offsets.png` |
+| 2.17 | TESTED | `OffsetConflictDemo.vue`、截图 `2-17-offset-override.png`；补充 `StackingContextDemo.vue`/`2-17-stacking.png` |
+| 2.18 | TESTED | `WireframeView.vue` 原创 plan 线框 + 真实 implemented 页面；截图 `2-18-wireframe-plan.png`、`2-18-implemented.png` |
+| 2.19 | TESTED | `LayoutPrinciplesDemo.vue` 真实 AppLayout 高亮/响应式测量；截图 `2-19-principles.png` |
+| 2.20 | OUT_OF_SCOPE（MS-07） | 仅规划入口，待实现 |
+| 2.21 | OUT_OF_SCOPE（系统/论文） | 由业务实现与 MS-09 负责 |
+| 2.22 | NOT_APPLICABLE | 任务（二），本项目不采用 |
+
+### 3.3 最终交付追踪（MS-06.10）
+
+> 本表记录最终交付证据；课程原文标题保持原样，2.15/2.17 的补充实验、2.18 的负责人批准替代方案在“遗留/说明”中明确标注。
+
+| 编号 | 课程原文标题 | 实现页面 / Vue 组件 | 关键 CSS | 测试脚本 | 截图 | 证据报告 | 状态 | 遗留/说明 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2.1 | 行内显示类型 | `/web-basics#chapter-2.1` / `InlineDemo.vue` | inline、padding/border/margin、width/height | ms06-3、ms06-9 | `2-01-inline.png` | ms-06.3 | 已测试 | — |
+| 2.2 | 区块显示类型 | `#chapter-2.2` / `BlockDemo.vue` | block、width auto、margin auto | ms06-3、ms06-9 | `2-02-block.png` | ms-06.3 | 已测试 | — |
+| 2.3 | 行内区块显示类型 | `#chapter-2.3` / `InlineBlockDemo.vue` | inline-block、空白、原生换行 | ms06-3、ms06-9 | `2-03-inline-block.png` | ms-06.3 | 已测试 | — |
+| 2.4 | 弹性显示类型 | `#chapter-2.4` / `FlexDemo.vue` | flex、direction、justify、align、wrap、gap | ms06-3、ms06-9 | `2-04-flex.png` | ms-06.3 | 已测试 | — |
+| 2.5 | 网格显示类型 | `#chapter-2.5` / `GridDemo.vue` | grid、fr、gap、span | ms06-3、ms06-9 | `2-05-grid.png` | ms-06.3 | 已测试 | — |
+| 2.6 | 盒模型各部分 | `#chapter-2.6` / `BoxModelDemo.vue` | content/padding/border/margin | ms06-4、ms06-9 | `2-06-box-parts.png` | ms-06-4 | 已测试 | — |
+| 2.7 | 标准盒模型 | `#chapter-2.7` / `BoxSizingDemo.vue` | content-box | ms06-4、ms06-9 | `2-07-content-box.png` | ms-06-4 | 已测试 | — |
+| 2.8 | 替代盒模型 | `#chapter-2.8` / `BoxSizingDemo.vue` | border-box | ms06-4、ms06-9 | `2-08-border-box.png` | ms-06-4 | 已测试 | — |
+| 2.9 | 常规流布局（静态定位） | `#chapter-2.9` / `NormalFlowDemo.vue` | static、block、inline | ms06-4、ms06-9 | `2-09-normal-flow.png` | ms-06-4 | 已测试 | — |
+| 2.10 | 相对定位 | `#chapter-2.10` / `RelativePositionDemo.vue` | relative、top/left、原占位 | ms06-4、ms06-9 | `2-10-relative.png` | ms-06-4 | 已测试 | — |
+| 2.11 | 绝对定位 | `#chapter-2.11` / `AbsolutePositionDemo.vue` | absolute、offset、脱流 | ms06-5、ms06-9 | `2-11-absolute.png` | ms-06-5 | 已测试 | — |
+| 2.12 | 改变绝对定位的定位上下文 | `#chapter-2.12` / `PositioningContextDemo.vue` | 定位祖先、父级 static/relative | ms06-5、ms06-9 | `2-12-absolute-context.png` | ms-06-5 | 已测试 | — |
+| 2.13 | 固定定位 | `#chapter-2.13` / `FixedPositionDemo.vue` | fixed、视口、transform 例外说明 | ms06-5、ms06-9 | `2-13-fixed.png` | ms-06-5 | 已测试 | 固定徽标只在区域进入视口时显示 |
+| 2.14 | 粘性定位 | `#chapter-2.14` / `StickyPositionDemo.vue` | sticky、top 阈值、滚动容器 | ms06-5、ms06-9 | `2-14-sticky.png` | ms-06-5 | 已测试 | — |
+| 2.15 | 粘性约束矩形 | `#chapter-2.15` / `StickyConstraintDemo.vue` + 五定位方式对比表 | sticky、父容器边界 | ms06-5、ms06-9 | `2-15-sticky-rect.png` | ms-06-5 | 已测试 | 对比表为补充，截图仍为课程原 2.15 场景 |
+| 2.16 | 定位属性上下左右 | `#chapter-2.16` / `OffsetPropertiesDemo.vue` | static/relative/absolute、四方向 | ms06-6、ms06-9 | `2-16-offsets.png` | ms-06-6 | 已测试 | — |
+| 2.17 | 定位属性之间的覆盖影响 | `#chapter-2.17` / `OffsetConflictDemo.vue` + `StackingContextDemo.vue` | left/right、auto/fixed、margin auto、z-index 上下文 | ms06-6、ms06-9 | `2-17-offset-override.png`、`2-17-stacking.png` | ms-06-6 | 已测试 | z-index/堆叠上下文为补充实验 |
+| 2.18 | 使用线框风格仿制XXX网页的布局 | `/web-basics/wireframe` / `WireframeView.vue` | plan 低线框、真实 implemented 页面 | ms06-7、ms06-9 | `2-18-wireframe-plan.png`、`2-18-implemented.png` | ms-06-7 | 已测试 | 批准改为快递通自身原创线框，不仿制外部网页 |
+| 2.19 | 布局原则思考 | `#chapter-2.19` / `LayoutPrinciplesDemo.vue` | 真实 AppLayout outline、响应式布局 | ms06-8、ms06-9 | `2-19-principles.png` | ms-06-8 | 已测试 | 截图聚焦三区域；控制面板由测试覆盖 |
+
 ---
 
 ## 4. 开发阶段拆分
