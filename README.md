@@ -22,24 +22,24 @@
 
 | 项目 | 状态 |
 | --- | --- |
-| MS-01～MS-08 主要开发 | 已完成实施；MS-08 因 D08 尚未正式结束 |
+| MS-01～MS-08 主要开发 | **已完成实施**（MS-08 的功能/测试实施完成；D08 风险独立保留） |
 | MS-08-R1 补充核验 | 已完成 |
 | MS-08-R2 风险分析/人工方案 | 已完成 |
 | MS-09 论文与截图 | **COMPLETED**：四图/图号/目录/Word/PDF 完成；封面/个人信息 USER DEFERRED |
 | MS-10 验收与答辩准备 | **COMPLETED（阶段已关闭）**；MS-10 阶段完成时项目整体为 NOT READY，当前为条件性验收 |
+| MS-11 最终交付核验 | **COMPLETED（审计收尾完成）**；项目整体为条件性验收（D08/AC-30） |
 | MS-12 论文/截图/PDF 收尾 | **COMPLETED**：四张真实截图、TOC、68 页 Word/PDF 完成；封面 USER DEFERRED |
 | MS-13 最终回归/验收评审 | **COMPLETED**：160 tests、build、Chrome/Edge、AC/答辩材料完成 |
-| MS-11 最终交付核验 | **COMPLETED（审计收尾完成）**；项目整体为条件性验收（D08/AC-30） |
 | 项目整体 | **CONDITIONALLY ACCEPTED**（D08/AC-30 风险；正式签字未完成） |
 | 后端测试 | **160 tests，0 failures/errors/skips**（隔离 Schema） |
 | 前端构建 | `npm run build` 通过 |
 | Chrome / Edge | Chrome 全量回归；Edge 完整矩阵通过 |
-| 性能 | 100 行解析 P95 2.81ms；10000 条数据集、pageSize=10 的分页 P95 3.59ms（本机 30 样本） |
-| GitHub Actions CI | **NOT RUN** |
+| 性能 | **MS-08 历史证据**：100 行解析 P95 2.81ms；10000 条数据集、pageSize=10 分页 P95 3.59ms（本机 30 样本） |
+| GitHub Actions CI | **NOT RUN / P2 / USER DEFERRED**（非课程硬性要求） |
 | D08 / AC-30 | **P1 OPEN / PARTIAL** |
-| AC-31 / AC-32 | PASS / PASS（本地验证，CI NOT RUN） |
+| AC-31 / AC-32 | PASS（性能为 MS-08 历史证据，Chrome/Edge 含本轮回归）/ PASS（本地 build/160 tests；CI NOT RUN） |
 
-> MS-08 尚未正式结束；AC-30 不能标记 PASS。MS-09 完成论文不等于 MS-08 风险关闭。
+> D08 仍为 P1 OPEN / USER DEFERRED；MS-08 主要开发完成不等于 D08 已关闭。项目阶段收尾完成不等于教师/课程组正式验收签字。
 
 ---
 
@@ -371,6 +371,8 @@ MS08_PERF_OK
 
 ### 11.4 性能
 
+> 以下为 **MS-08 历史测试证据**；MS-13 本轮未重新执行性能测试，不能把这些数字说成本轮新结果。
+
 | 测试场景 | 平均耗时 | 中位数 | P95 |
 | --- | ---: | ---: | ---: |
 | 100 行解析 HTTP | 2.29ms | 2.12ms | 2.81ms |
@@ -402,7 +404,7 @@ MS08_PERF_OK
 | MS-05 地址簿管理前端 | 已完成 | 列表、搜索、分页、新建/编辑/删除/批删 |
 | MS-06 Web 基础实践 | 已完成 | 2.1～2.19，含 2.15 与 2.18 真实截图 |
 | MS-07 Servlet 映射 | 已完成 | 2.20，三个真实 Servlet + Spring MVC 对照 |
-| MS-08 全量测试 | 已实施，未正式结束 | 160 tests、Chrome/Edge、E2E、性能；D08 P1 OPEN |
+| MS-08 全量测试 | 已实施；D08 风险独立 OPEN | 160 tests、Chrome/Edge、E2E、性能（历史）；D08 P1 OPEN |
 | MS-09 论文与截图 | COMPLETED | 四图/目录/Word/PDF 完成；封面 USER DEFERRED |
 | MS-10 验收与答辩 | COMPLETED（阶段关闭） | 文档、CRUD、5/10 核心流程、分页、数据清理完成；MS-10 阶段时为 NOT READY，当前条件性验收 |
 | MS-11 最终交付核验 | COMPLETED | 审计/追踪/剩余清单完成 |
@@ -450,7 +452,7 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 
 ![Servlet 映射](docs/screenshots/2-20-servlet-mapping.png)
 
-> 地址列表、编辑弹窗、删除确认、批量删除确认四张 2.21 业务截图仍是 MS-09 的 BLOCKED 项；MS-10 已在授权后启动 MySQL 完成 CRUD/演示，但未擅自补拍论文截图。README 不伪造或复用旧图。详见 `docs/paper/ms-09-missing-information.md`。
+> 2.21 地址列表、编辑、单删、批删四张真实截图已由 MS-12 补齐，并插入论文/Word/PDF；封面/个人信息仍 USER DEFERRED。README 不伪造或复用旧图。
 
 ---
 
