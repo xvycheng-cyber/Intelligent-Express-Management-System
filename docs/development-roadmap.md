@@ -192,9 +192,9 @@
 | 任务 | ① 从零按 README 复现一遍；② 准备演示脚本（5 分钟版/10 分钟版）；③ 准备问题清单（盒模型、定位、MVC、Servlet 映射、解析规则、事务、LIKE 转义、无认证边界）；④ 备份数据库与演示数据；⑤ `netstat` 复核仅本机监听；⑥ 代码冻结 |
 | 产出 | 演示脚本、答辩 Q&A、可运行环境 |
 | 依赖 | MS-08、MS-09 |
-| 状态 | ✅ **COMPLETED（阶段已关闭）**；项目整体验收仍为 **NOT READY** |
+| 状态 | ✅ **COMPLETED（阶段已关闭）**；MS-10 阶段时项目整体为 NOT READY |
 | 估算 | 2 人日 |
-| 出口条件 | 原计划 AC-01～AC-32 全部满足；当前项目整体 **NOT READY**（D08/AC-30；CI P2），MS-10 阶段已归档完成 |
+| 出口条件 | 原计划 AC-01～AC-32 全部满足；MS-10 阶段时为 NOT READY（D08/AC-30；CI P2），当前为条件性验收 |
 
 ---
 
@@ -260,11 +260,12 @@
 | Servlet 演示 | ✅ 已完成 | MS-07 |
 | 测试记录 | ⚠ MS-08 已执行但 D08 P1 待处置 | MS-08；AC-30 PARTIAL；CI 未运行 |
 | 论文 | ✅ MS-09 COMPLETED（四图/目录/Word/PDF） | 封面 USER DEFERRED |
-| 论文收尾 | ✅ MS-12 完成四图/TOC/Word/PDF | 项目整体仍 NOT READY |
-| 验收材料 | ✅ MS-10 COMPLETED（阶段关闭） | 文档/CRUD/5-10/分页完成；项目整体 NOT READY（D08/AC-30；CI P2） |
+| 论文收尾 | ✅ MS-12 完成四图/TOC/Word/PDF | 项目整体建议条件性验收 |
+| 最终回归 | ✅ MS-13 完成 160 tests/build/Chrome/Edge/AC | D08/AC-30 未关闭；正式签字未完成 |
+| 验收材料 | ✅ MS-10 COMPLETED（阶段关闭） | 文档/CRUD/5-10/分页完成；当时 NOT READY |
 | `docs/screenshots/` | ✅ 2.1～2.20 已采集 | MS-06/MS-07 |
 
-> **项目整体验收：NOT READY。** MS-10、MS-11、MS-12 均已完成阶段收尾；D08 P1 OPEN、AC-30 PARTIAL 仍使项目 NOT READY；CI P2 NOT RUN；不得把路线图整体标记为全部完成或正式验收通过。
+> **项目整体：CONDITIONALLY ACCEPTED（D08/AC-30 USER DEFERRED；正式签字未完成）。** MS-09～MS-13 均已完成阶段收尾；CI P2 NOT RUN；不得写成无条件 ACCEPTED。
 
 ---
 

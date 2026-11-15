@@ -26,10 +26,11 @@
 | MS-08-R1 补充核验 | 已完成 |
 | MS-08-R2 风险分析/人工方案 | 已完成 |
 | MS-09 论文与截图 | **COMPLETED**：四图/图号/目录/Word/PDF 完成；封面/个人信息 USER DEFERRED |
-| MS-10 验收与答辩准备 | **COMPLETED（阶段已关闭）**；仅表示阶段工作完成，项目整体仍 **NOT READY** |
+| MS-10 验收与答辩准备 | **COMPLETED（阶段已关闭）**；MS-10 阶段完成时项目整体为 NOT READY，当前为条件性验收 |
 | MS-12 论文/截图/PDF 收尾 | **COMPLETED**：四张真实截图、TOC、68 页 Word/PDF 完成；封面 USER DEFERRED |
-| MS-11 最终交付核验 | **COMPLETED（审计收尾完成）**；项目整体仍 NOT READY（D08/AC-30） |
-| 项目整体验收 | **NOT READY**（D08 P1、AC-30 PARTIAL） |
+| MS-13 最终回归/验收评审 | **COMPLETED**：160 tests、build、Chrome/Edge、AC/答辩材料完成 |
+| MS-11 最终交付核验 | **COMPLETED（审计收尾完成）**；项目整体为条件性验收（D08/AC-30） |
+| 项目整体 | **CONDITIONALLY ACCEPTED**（D08/AC-30 风险；正式签字未完成） |
 | 后端测试 | **160 tests，0 failures/errors/skips**（隔离 Schema） |
 | 前端构建 | `npm run build` 通过 |
 | Chrome / Edge | Chrome 全量回归；Edge 完整矩阵通过 |
@@ -403,9 +404,10 @@ MS08_PERF_OK
 | MS-07 Servlet 映射 | 已完成 | 2.20，三个真实 Servlet + Spring MVC 对照 |
 | MS-08 全量测试 | 已实施，未正式结束 | 160 tests、Chrome/Edge、E2E、性能；D08 P1 OPEN |
 | MS-09 论文与截图 | COMPLETED | 四图/目录/Word/PDF 完成；封面 USER DEFERRED |
-| MS-10 验收与答辩 | COMPLETED（阶段关闭） | 文档、CRUD、5/10 核心流程、分页、数据清理完成；仅代表阶段工作完成，项目整体仍 NOT READY |
+| MS-10 验收与答辩 | COMPLETED（阶段关闭） | 文档、CRUD、5/10 核心流程、分页、数据清理完成；MS-10 阶段时为 NOT READY，当前条件性验收 |
 | MS-11 最终交付核验 | COMPLETED | 审计/追踪/剩余清单完成 |
 | MS-12 论文/截图/PDF | COMPLETED | 四张真实截图、TOC、Word/PDF 完成；封面 USER DEFERRED |
+| MS-13 最终回归 | COMPLETED | 160 tests/build/Chrome/Edge/AC 矩阵 |
 
 **MS-08 状态：** AC-30 = PARTIAL；AC-31 = PASS；AC-32 = PASS（本地验证，CI NOT RUN）；D08 = OPEN，P1。
 MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处置；尚未完成第二台物理设备远程验证；用户尚未授权修改 MySQL/防火墙；不能声称外部登录成功或 MS-08 无条件通过。
@@ -474,6 +476,8 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 | [`docs/review/ms-11-final-delivery-checklist.md`](docs/review/ms-11-final-delivery-checklist.md) | MS-11 最终交付清单 |
 | [`docs/review/ms-11-r1-closeout-report.md`](docs/review/ms-11-r1-closeout-report.md) | MS-11-R1 审计收尾 |
 | [`docs/review/ms-12-handoff.md`](docs/review/ms-12-handoff.md) | MS-12 论文/截图交接 |
+| [`docs/review/ms-13-final-acceptance-report.md`](docs/review/ms-13-final-acceptance-report.md) | MS-13 最终验收评审 |
+| [`docs/review/ms-13-handoff.md`](docs/review/ms-13-handoff.md) | MS-13 交接 |
 | [`docs/test-results/ms-10/`](docs/test-results/ms-10/) | MS-10 演示演练记录 |
 | [`docs/paper/快递地址簿录入程序设计.md`](docs/paper/快递地址簿录入程序设计.md) | 论文 Markdown |
 | [`deliverables/MS-09/`](deliverables/MS-09/) | Word/PDF 与图表清单 |
@@ -493,10 +497,10 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 | 里程碑 | 当前状态 | 内容 |
 | --- | --- | --- |
 | MS-09 | COMPLETED | 四图/目录/Word/PDF 完成；封面 USER DEFERRED |
-| MS-10 | COMPLETED（阶段关闭） | 文档、CRUD、5/10 核心流程、分页完成；仅表示阶段工作完成，项目整体验收仍为 NOT READY |
+| MS-10 | COMPLETED（阶段关闭） | 文档、CRUD/5-10/分页完成；当前项目为条件性验收 |
 | D08 | P1 OPEN | MySQL X Plugin 33060/防火墙风险待用户授权处置 |
 
-**MS-09、MS-10、MS-11、MS-12 均已完成阶段收尾；项目整体仍为 NOT READY。** 阻塞项是 D08 P1 OPEN、AC-30 PARTIAL；CI 仍 NOT RUN，但按课程原始要求属工程化增强（P2），不是硬性验收条件。
+**MS-09～MS-13 均已完成阶段收尾；项目评审建议为 CONDITIONALLY ACCEPTED — SUBJECT TO D08 / AC-30 USER-DEFERRED RISK。** D08 P1 OPEN、AC-30 PARTIAL；CI NOT RUN（P2），正式签字验收未完成。
 
 ---
 

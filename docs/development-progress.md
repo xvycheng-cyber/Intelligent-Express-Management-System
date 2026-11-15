@@ -18,9 +18,10 @@
 | MS-08 全量测试 | PARTIAL（P1 D08） | 160 后端测试、MS04/05/06/07 回归、E2E、性能/Edge 通过；MySQL X 33060 暴露待用户人工处置；AC-30 PARTIAL |
 | MS-09 论文/截图 | COMPLETED | 四图/目录/Word/PDF 完成；封面 USER DEFERRED |
 | MS-10 验收/答辩 | **COMPLETED（阶段关闭）** | 文档/CRUD/5-10/分页完成；仅代表阶段工作完成 |
-| MS-11 最终交付核验 | **COMPLETED（审计收尾）** | 审计/追踪/剩余清单完成；项目整体仍 NOT READY（D08/AC-30） |
+| MS-11 最终交付核验 | **COMPLETED（审计收尾）** | 审计/追踪/剩余清单完成；MS-11 阶段时为 NOT READY（D08/AC-30） |
 | MS-12 论文/截图/PDF | **COMPLETED** | 四图/TOC/Word/PDF 完成；封面 USER DEFERRED |
-| 项目整体验收 | **NOT READY** | D08 P1 OPEN、AC-30 PARTIAL；CI P2 NOT RUN |
+| MS-13 最终回归/评审 | **COMPLETED** | 160 tests/build/Chrome/Edge/AC/答辩材料 |
+| 项目整体 | **CONDITIONALLY ACCEPTED** | D08/AC-30 风险；正式签字未完成 |
 
 当前实现事实：
 
@@ -42,7 +43,7 @@
 - 5 分钟及 10 分钟演示流程：完成核心功能步骤核验；自动化脚本耗时不能等同于现场答辩耗时；
 - 数据清理：完成本轮演示数据清理，最终 `express_address` 0 行；
 - MS-10-R2 整改报告/最终复核报告：已交付；
-- **项目整体验收仍为 NOT READY**：D08 P1 OPEN、AC-30 PARTIAL；CI 为 P2 NOT RUN，不是当前 AC-32 的硬性阻塞。
+- **当前项目为 CONDITIONALLY ACCEPTED（D08/AC-30 USER DEFERRED）**；MS-10/MS-11 阶段归档时曾为 NOT READY；CI 为 P2 NOT RUN。
 
 **阶段关闭不等于项目正式验收通过。**
 
@@ -89,8 +90,8 @@ MS-10 验收/答辩        PASS（实际演示完成；项目正式验收受 D08
 | MS-07 Servlet 演示 | NOT_STARTED | 无 `servlet/`、`demo/` 文件 | 无 | 无 | 未开始 |
 | MS-08 全量测试 | PARTIAL | 有分散测试/脚本 | 无 R1～R5 汇总、无 CI | 无 | 部分 |
 | MS-09 论文/截图 | COMPLETED | 四图、目录、Word/PDF | 封面 USER DEFERRED | 无 | MS-12 完成 |
-| MS-10 验收/答辩 | COMPLETED（阶段关闭） | 文档/CRUD/5-10/分页完成 | 项目整体验收 NOT READY（D08/AC-30；CI P2） | 无 | 实际演示完成 |
-| MS-11 最终交付核验 | COMPLETED（审计收尾） | 审计、追踪矩阵、剩余清单、交付清单 | 项目整体仍 NOT READY（D08/AC-30） | 无 | 审计完成 |
+| MS-10 验收/答辩 | COMPLETED（阶段关闭） | 文档/CRUD/5-10/分页完成 | MS-10 阶段时 NOT READY（D08/AC-30；CI P2） | 无 | 实际演示完成 |
+| MS-11 最终交付核验 | COMPLETED（审计收尾） | 审计、追踪矩阵、剩余清单、交付清单 | MS-11 阶段时 NOT READY（D08/AC-30） | 无 | 审计完成 |
 
 **状态定义**：IMPLEMENTED = 代码存在；TESTED = 有测试/构建/浏览器执行证据；ACCEPTED = 明确正式验收；PARTIAL = 部分；NOT_STARTED = 未开始；BLOCKED = 有阻塞证据。
 
