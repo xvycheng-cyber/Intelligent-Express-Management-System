@@ -17,7 +17,7 @@
 | MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；160 后端测试；`2-20-*` 截图 |
 | MS-08 全量测试 | PARTIAL（P1 D08） | 160 后端测试、MS04/05/06/07 回归、E2E、性能/Edge 通过；MySQL X 33060 暴露待用户人工处置；AC-30 PARTIAL |
 | MS-09 论文/截图 | PARTIAL | 正文/Word/PDF 已生成；封面信息与 2.21 四个业务截图 BLOCKED |
-| MS-10 验收/答辩 | PARTIAL | 验收/Q&A/演示材料完成；实际 DB 演示 BLOCKED |
+| MS-10 验收/答辩 | PASS（实际演示完成） | 文档/CRUD/5-10/分页完成；项目正式验收仍受 D08/MS-09/CI 限制 |
 
 当前实现事实：
 
@@ -47,7 +47,7 @@ MS-06 Web 实践页       NOT_STARTED
 MS-07 Servlet 演示     NOT_STARTED
 MS-08 全量测试         PARTIAL（P1 D08；160 后端测试/Playwright/E2E/性能已执行）
 MS-09 论文/截图        PARTIAL（正文/Word/PDF；封面信息与 2.21 四图 BLOCKED）
-MS-10 验收/答辩        PARTIAL（材料完成；实际 DB 演示 BLOCKED）
+MS-10 验收/答辩        PASS（实际演示完成；项目正式验收受 D08/MS-09/CI 限制）
 ```
 
 **准确位置**：MS-05 代码与浏览器脚本已完成并有报告，但 **Git HEAD 仍停在 MS-04**，MS-05 文件未提交；因此不能称为“已完成验收”。
@@ -71,7 +71,7 @@ MS-10 验收/答辩        PARTIAL（材料完成；实际 DB 演示 BLOCKED）
 | MS-07 Servlet 演示 | NOT_STARTED | 无 `servlet/`、`demo/` 文件 | 无 | 无 | 未开始 |
 | MS-08 全量测试 | PARTIAL | 有分散测试/脚本 | 无 R1～R5 汇总、无 CI | 无 | 部分 |
 | MS-09 论文/截图 | PARTIAL | 正文、Word/PDF、真实截图 | 2.21 列表/编辑/删除/批删 BLOCKED；封面待补 | 无 | 初稿已生成 |
-| MS-10 验收/答辩 | PARTIAL | 验收矩阵、复现、演示脚本、46 题 Q&A、故障/证据 | 实际 DB 演示 BLOCKED；D08 P1 | 部分 | 材料完成 |
+| MS-10 验收/答辩 | PASS（实际演示完成） | 文档/CRUD/5-10/分页完成 | 项目正式验收受 D08/MS-09/CI 限制 | 无 | 实际演示完成 |
 
 **状态定义**：IMPLEMENTED = 代码存在；TESTED = 有测试/构建/浏览器执行证据；ACCEPTED = 明确正式验收；PARTIAL = 部分；NOT_STARTED = 未开始；BLOCKED = 有阻塞证据。
 
@@ -143,6 +143,8 @@ MS-10 验收/答辩        PARTIAL（材料完成；实际 DB 演示 BLOCKED）
 ---
 
 ## 4. 已存在但未完成原始范围的功能
+
+> **历史快照说明：** 本节及 §5～§8 是 MS-05 时期审计记录，不代表当前文件缺失；例如表中的“答辩脚本/Q&A 不存在”是历史状态，MS-10 已生成材料。当前状态以 §0 为准。
 
 以下是原始计划要求、当前**没有实现**的功能：
 

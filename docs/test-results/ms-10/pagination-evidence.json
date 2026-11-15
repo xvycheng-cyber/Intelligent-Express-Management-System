@@ -1,0 +1,61 @@
+{
+  "ids": [
+    "24",
+    "25",
+    "26"
+  ],
+  "page1": [
+    200,
+    {
+      "code": 0,
+      "message": "OK",
+      "data": {
+        "records": [
+          {
+            "id": "26",
+            "receiverName": "MSPAGEAC",
+            "phone": "17790006003",
+            "fullAddress": "Zhejiang Hangzhou MS10-DEMO-PAGE-MSPAGEAC",
+            "createTime": "2026-11-15 21:06:08",
+            "updateTime": "2026-11-15 21:06:08"
+          },
+          {
+            "id": "25",
+            "receiverName": "MSPAGEAB",
+            "phone": "17790006002",
+            "fullAddress": "Zhejiang Hangzhou MS10-DEMO-PAGE-MSPAGEAB",
+            "createTime": "2026-11-15 21:06:08",
+            "updateTime": "2026-11-15 21:06:08"
+          }
+        ],
+        "total": 3,
+        "current": 1,
+        "size": 2,
+        "pages": 2
+      }
+    }
+  ],
+  "page2": [
+    200,
+    {
+      "code": 0,
+      "message": "OK",
+      "data": {
+        "records": [
+          {
+            "id": "24",
+            "receiverName": "MSPAGEAA",
+            "phone": "17790006001",
+            "fullAddress": "Zhejiang Hangzhou MS10-DEMO-PAGE-MSPAGEAA",
+            "createTime": "2026-11-15 21:06:08",
+            "updateTime": "2026-11-15 21:06:08"
+          }
+        ],
+        "total": 3,
+        "current": 2,
+        "size": 2,
+        "pages": 2
+      }
+    }
+  ]
+}

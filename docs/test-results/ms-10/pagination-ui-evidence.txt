@@ -1,0 +1,7 @@
+MS-10 UI pagination evidence (2026-11-15)
+Environment: Chrome Playwright 1440x1000; /addresses; 11 test rows.
+Command: node inline Playwright check; open /addresses; read `address-total`, row count; click `.el-pagination button.btn-next`; read row count.
+Actual output:
+{"total":"11","rows":10,"page2rows":1}
+Conclusion: total=11, page size=10, page 1=10 rows, page 2=1 row.
+The 11 records were created for this check and deleted by their IDs (27-37); final DB count=0.

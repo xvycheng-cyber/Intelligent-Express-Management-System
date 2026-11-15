@@ -1,0 +1,304 @@
+{
+  "steps": [
+    {
+      "label": "health",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "status": "UP"
+        }
+      }
+    },
+    {
+      "label": "health_db",
+      "method": "GET",
+      "path": "/health/db",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "status": "UP"
+        }
+      }
+    },
+    {
+      "label": "create-MSDEMOCRUDAA",
+      "method": "POST",
+      "path": "/addresses",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "1"
+        }
+      }
+    },
+    {
+      "label": "create-MSDEMOCRUDAB",
+      "method": "POST",
+      "path": "/addresses",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "2"
+        }
+      }
+    },
+    {
+      "label": "create-MSDEMOCRUDAC",
+      "method": "POST",
+      "path": "/addresses",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "3"
+        }
+      }
+    },
+    {
+      "label": "list-page-1-size-2",
+      "method": "GET",
+      "path": "/addresses?page=1&size=2",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "records": [
+            {
+              "id": "3",
+              "receiverName": "MSDEMOCRUDAC",
+              "phone": "17790003003",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAC",
+              "createTime": "2026-11-15 21:02:43",
+              "updateTime": "2026-11-15 21:02:43"
+            },
+            {
+              "id": "2",
+              "receiverName": "MSDEMOCRUDAB",
+              "phone": "17790003002",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAB",
+              "createTime": "2026-11-15 21:02:42",
+              "updateTime": "2026-11-15 21:02:42"
+            }
+          ],
+          "total": 3,
+          "current": 1,
+          "size": 2,
+          "pages": 2
+        }
+      }
+    },
+    {
+      "label": "search-name",
+      "method": "GET",
+      "path": "/addresses?page=1&size=10&keyword=MSDEMOCRUDAA",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "records": [
+            {
+              "id": "1",
+              "receiverName": "MSDEMOCRUDAA",
+              "phone": "17790003001",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAA",
+              "createTime": "2026-11-15 21:02:42",
+              "updateTime": "2026-11-15 21:02:42"
+            }
+          ],
+          "total": 1,
+          "current": 1,
+          "size": 10,
+          "pages": 1
+        }
+      }
+    },
+    {
+      "label": "search-phone",
+      "method": "GET",
+      "path": "/addresses?page=1&size=10&keyword=17790003002",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "records": [
+            {
+              "id": "2",
+              "receiverName": "MSDEMOCRUDAB",
+              "phone": "17790003002",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAB",
+              "createTime": "2026-11-15 21:02:42",
+              "updateTime": "2026-11-15 21:02:42"
+            }
+          ],
+          "total": 1,
+          "current": 1,
+          "size": 10,
+          "pages": 1
+        }
+      }
+    },
+    {
+      "label": "get-before-edit",
+      "method": "GET",
+      "path": "/addresses/1",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "1",
+          "receiverName": "MSDEMOCRUDAA",
+          "phone": "17790003001",
+          "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAA",
+          "createTime": "2026-11-15 21:02:42",
+          "updateTime": "2026-11-15 21:02:42"
+        }
+      }
+    },
+    {
+      "label": "edit-01",
+      "method": "PUT",
+      "path": "/addresses/1",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "1"
+        }
+      }
+    },
+    {
+      "label": "get-after-edit",
+      "method": "GET",
+      "path": "/addresses/1",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "1",
+          "receiverName": "MSDEMOCRUDAA",
+          "phone": "17790003001",
+          "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-EDITED",
+          "createTime": "2026-11-15 21:02:42",
+          "updateTime": "2026-11-15 21:02:43"
+        }
+      }
+    },
+    {
+      "label": "delete-03",
+      "method": "DELETE",
+      "path": "/addresses/3",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": null
+      }
+    },
+    {
+      "label": "get-deleted-03",
+      "method": "GET",
+      "path": "/addresses/3",
+      "status": 404,
+      "response": "{\"code\":40401,\"message\":\"记录不存在或已被删除\",\"data\":null}"
+    },
+    {
+      "label": "create-MSDEMOCRUDAD",
+      "method": "POST",
+      "path": "/addresses",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "4"
+        }
+      }
+    },
+    {
+      "label": "create-MSDEMOCRUDAAE",
+      "method": "POST",
+      "path": "/addresses",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "id": "5"
+        }
+      }
+    },
+    {
+      "label": "batch-delete",
+      "method": "POST",
+      "path": "/addresses/batch-delete",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "deletedCount": 2
+        }
+      }
+    },
+    {
+      "label": "list-after-crud",
+      "method": "GET",
+      "path": "/addresses?page=1&size=10&keyword=MSDEMO",
+      "status": 200,
+      "response": {
+        "code": 0,
+        "message": "OK",
+        "data": {
+          "records": [
+            {
+              "id": "2",
+              "receiverName": "MSDEMOCRUDAB",
+              "phone": "17790003002",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-MSDEMOCRUDAB",
+              "createTime": "2026-11-15 21:02:42",
+              "updateTime": "2026-11-15 21:02:42"
+            },
+            {
+              "id": "1",
+              "receiverName": "MSDEMOCRUDAA",
+              "phone": "17790003001",
+              "fullAddress": "Zhejiang Hangzhou Xihu MS10-DEMO-CRUD-EDITED",
+              "createTime": "2026-11-15 21:02:42",
+              "updateTime": "2026-11-15 21:02:43"
+            }
+          ],
+          "total": 2,
+          "current": 1,
+          "size": 10,
+          "pages": 1
+        }
+      }
+    }
+  ],
+  "ids": {
+    "MSDEMOCRUDAA": 1,
+    "MSDEMOCRUDAB": 2,
+    "MSDEMOCRUDAC": 3
+  },
+  "batch_ids": [
+    "4",
+    "5"
+  ]
+}

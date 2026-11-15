@@ -4,7 +4,7 @@
 | --- | --- |
 | 日期 | 2026-11-15 |
 | 原则 | 虚构数据、隔离环境、只读优先、人工备份/恢复 |
-| 本阶段执行 | 未写数据库、未备份/恢复、未启动 MySQL |
+| 本阶段执行 | 在用户授权后启动 MySQL，完成 CRUD/5-10 分钟核心演示，最终清理本轮数据；未改配置/防火墙 |
 
 ---
 
@@ -13,19 +13,26 @@
 固定使用以下虚构文本（可在 `/import` 直接粘贴）：
 
 ```text
-菜小鸟，13800138000，浙江省杭州市西湖区湖滨小区12栋301室
-张三，13900139000，浙江省杭州市余杭区文一西路100号
-李四，0571-88886666，浙江省杭州市拱墅区莫干山路100号
-只有姓名没有电话
-王五，1380013800，浙江省杭州市滨江区江陵路88号
+5 分钟（前 3 行）：
+MSFIVEAA，17790004001，浙江省杭州市西湖区MS10-DEMO-5-A
+MSFIVEAB，17790004002，浙江省杭州市余杭区MS10-DEMO-5-B
+MSFIVEAX
+
+10 分钟（完整 5 行）：
+MSTENAA，17790005001，浙江省杭州市西湖区MS10-DEMO-10-A
+MSTENAB，17790005002，浙江省杭州市余杭区MS10-DEMO-10-B
+MSTENAX
+MSTENAC，0571-88886666，浙江省杭州市拱墅区MS10-DEMO-10-C
+MSTENAZ，1779000500，浙江省杭州市滨江区MS10-DEMO-10-D
 ```
 
 说明：
 
 - 姓名、电话、地址均为虚构；
-- 第 4 行用于展示无效行/人工修正；
-- 第 5 行手机号 10 位，用于展示格式错误（如实际规则接受则调整）；
-- 座机行用于展示多格式电话；
+- 第 3 行用于展示“无电话/无地址”的无效行；
+- 第 5 行手机号 10 位，**预期为无效**（E104 格式错误）；
+- 前 3 行预期 **2 有效 / 1 无效**；完整 5 行预期 **3 有效 / 2 无效**；
+- 座机行用于展示多格式电话，属于有效行；
 - 不包含真实快递收件人信息。
 
 ## 2. Schema 隔离
@@ -43,8 +50,18 @@
 仅在用户明确同意并已启动 MySQL 时执行；本阶段未执行：
 
 ```powershell
-mysqldump -u root -p --single-transaction --routines --triggers express_address_book > backup_express_address_book_YYYYMMDD_HHMM.sql
+& 'E:\mysql\install_directory\bin\mysqldump.exe' -u root -p --single-transaction --routines --triggers express_address_book > backup_express_address_book_YYYYMMDD_HHMM.sql
 ```
+
+MySQL 工具实际路径：
+
+```text
+mysql.exe      E:\mysql\install_directory\bin\mysql.exe
+mysqldump.exe  E:\mysql\install_directory\bin\mysqldump.exe
+mysqlcheck.exe E:\mysql\install_directory\bin\mysqlcheck.exe
+```
+
+这些路径当前不在全局 PATH；不要假设 `mysqldump`/`mysql` 可直接调用。
 
 要求：
 
@@ -58,7 +75,8 @@ mysqldump -u root -p --single-transaction --routines --triggers express_address_
 恢复会覆盖目标库数据，必须由用户确认后手动执行，本阶段不执行：
 
 ```powershell
-mysql -u root -p express_address_book < backup_express_address_book_YYYYMMDD_HHMM.sql
+Get-Content -Raw .\backup_express_address_book_YYYYMMDD_HHMM.sql |
+  & 'E:\mysql\install_directory\bin\mysql.exe' -u root -p express_address_book
 ```
 
 恢复前：
@@ -80,14 +98,26 @@ mysql -u root -p express_address_book < backup_express_address_book_YYYYMMDD_HHM
 ## 6. 本阶段实际数据操作
 
 ```text
-启动 MySQL：未执行
-数据库写入：未执行
+启动 MySQL：已由用户授权启动（mysqld --defaults-file...）
+数据库：express_address_book（本次确认）
+初始记录数：0
+数据库写入：仅本轮演示记录
 数据库备份：未执行
 数据库恢复：未执行
-DROP/TRUNCATE/DELETE：未执行
+DROP/TRUNCATE：未执行
+全表 DELETE：未执行
+清理方式：按已知本轮主键定向 DELETE
+最终记录数：0
 ```
 
-本阶段只通过解析 API 做只读解析，未保存。
+本轮创建并清理的记录主键：
+
+- API CRUD：1、2、3、4、5；
+- 5/10 分钟 UI：15、16、17、18、19、20、21、22、23；
+- API 分页：24、25、26；
+- UI 分页：27～37。
+
+没有修改或删除非本轮记录；清理前已保存 `docs/test-results/ms-10/db-state-before-cleanup.txt`。
 
 ## 7. 风险提示
 

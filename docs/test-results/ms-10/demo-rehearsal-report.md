@@ -4,106 +4,101 @@
 | --- | --- |
 | 日期 | 2026-11-15 |
 | 环境 | Windows 11 / JDK 17.0.21 / Node 22.14.0 / Chrome 157 / Edge 157 |
-| 数据库 | MySQL 未启动；`127.0.0.1:3306` 无监听 |
-| 浏览器 | **未在本轮启动浏览器全流程**；使用既有 Chrome/Edge 真实证据 |
-| 结论 | 健康/前端/解析实际通过；保存/列表/编辑/删除 **BLOCKED — NOT EXECUTED** |
+| 数据库 | MySQL 8.0.43，`express_address_book`，初始 0 行 |
+| 启动方式 | 用户授权后启动 `mysqld`；后端 8080、前端 5173 |
+| 结论 | **CRUD 与 5/10 分钟核心步骤实际执行通过；本记录保留真实耗时** |
 
 ---
 
-## 1. 启动
+## 1. 连接检查
 
-后端：
-
-```text
-java -jar backend/target/express-address-book-0.1.0-SNAPSHOT.jar
-```
-
-环境变量 `DB_URL` 指向 `express_address_book_ms08_test`，但 MySQL 未启动。
-
-结果：
-
-```text
-127.0.0.1:8080 LISTENING
-127.0.0.1:5173 LISTENING
-```
-
-MySQL 端口：
-
-```text
-127.0.0.1:3306 无监听
-```
-
-未启动/停止/重启 MySQL。
-
----
-
-## 2. 实际检查
-
-| 步骤 | 命令 | 实际结果 |
-| --- | --- | --- |
-| 后端存活 | `Invoke-WebRequest http://127.0.0.1:8080/api/health` | **200** `{"code":0,"data":{"status":"UP"}}` |
-| 数据库健康 | `Invoke-WebRequest http://127.0.0.1:8080/api/health/db` | **500**（数据库不可用） |
-| 前端页面 | `Invoke-WebRequest http://127.0.0.1:5173/` | **200**，返回 HTML |
-| 解析 | `POST /api/addresses/parse`，3 行虚构文本 | **200**，valid=2，invalid=1 |
-| 地址列表 | `GET /api/addresses?page=1&size=10` | **500**（数据库不可用） |
-| 保存 | 页面/接口 | **BLOCKED — NOT EXECUTED** |
-| 编辑/删除/批删 | 页面 | **BLOCKED — NOT EXECUTED** |
-
-解析输入：
-
-```text
-菜小鸟，13800138000，浙江省杭州市西湖区湖滨小区12栋301室
-张三，13900139000，浙江省杭州市余杭区文一西路100号
-只有姓名没有电话
-```
-
-解析结果：2 条有效、1 条无效；第三条无电话/地址，符合“部分行失败不丢弃其他行”。
-
----
-
-## 3. 演示流程完成度
-
-| 演示步骤 | 状态 |
+| 检查 | 结果 |
 | --- | --- |
-| 启动后端 | 实际通过 |
-| 启动前端 | 实际通过 |
-| 打开页面 | HTTP 200；未做浏览器截图 |
-| 固定虚构数据 | 已准备 |
-| 解析 | 实际通过（HTTP） |
-| 检查解析结果 | 通过 valid/invalid 计数 |
-| 人工修正 | 未在浏览器执行；代码/既有截图存在 |
-| 保存确认 | 未执行 |
-| 批量保存 | BLOCKED |
-| 地址簿列表/搜索 | BLOCKED |
-| 编辑/删除/批删 | BLOCKED |
+| MySQL 3306 | `127.0.0.1:3306` LISTENING |
+| `GET /api/health` | 200 |
+| `GET /api/health/db` | 200，`status=UP` |
+| 数据库 | `express_address_book` |
+| 表 | `express_address` |
+| 初始行数 | 0 |
 
----
+## 2. CRUD 证据
 
-## 4. 失败/阻塞原因
+`docs/test-results/ms-10/api-crud-evidence.json`：
 
-- MySQL 服务未启动；
-- 本阶段明确禁止启动/停止/重启 MySQL；
-- 没有可用数据库连接，地址列表/保存/编辑/删除无法真实执行；
-- 未使用 Mock、静态 HTML、旧图或伪造响应来冒充。
+| 操作 | 结果 |
+| --- | --- |
+| 新增 3 条 | 200，id=1/2/3 |
+| 列表 page1 size2 | 200 |
+| 姓名/电话搜索 | 200，命中 |
+| 编辑 id1 | 200，DB 地址更新 |
+| 单删 id3 | 200；后查 404；DB `is_deleted=1` |
+| 批量新增/删除 id4/5 | 200；DB `is_deleted=1` |
 
----
+分页证据：
 
-## 5. 使用的既有证据
+- API page1 size2 / page2 size2：`pagination-evidence.json`；
+- UI 11 条：total=11，第 1 页 10 行，第 2 页 1 行。
 
-- `docs/screenshots/2-21-import.png`（MS-09 真实）；
-- `docs/screenshots/2-21-parse-result.png`；
-- `docs/screenshots/2-21-edit-preview.png`；
-- `docs/screenshots/2-21-test-record.png`；
-- `docs/test-results/ms-08/` 的 160 tests/性能/浏览器记录。
+## 3. 5 分钟演练
 
-这些是 MS-08/MS-09 已执行证据，不冒充本轮新执行结果。
+实际 UI 脚本 `docs/test-results/ms-10/run-demo.mjs`：
 
----
+1. 3 行固定数据 → 3 行解析（2 有效/1 无效）；
+2. 修正无效行；
+3. 保存 3 条；
+4. 搜索 `MSFIVE`，3 行；
+5. 编辑首条；
+6. 删除首条，剩 2 行。
 
-## 6. 结论
+实际脚本耗时约 **9.2 秒**；不是现场讲解的 5 分钟。
 
-**5 分钟演示：PARTIAL（解析/健康/前端可演示；保存/列表未执行）。**  
-**10 分钟演示：PARTIAL/BLOCKED（数据库业务步骤未执行）。**  
-**完整项目验收：未达到。**
+## 4. 10 分钟演练
 
-未伪造任何截图、数据库结果或测试输出。
+1. 完整 5 行 → 5 行解析（3 有效/2 无效）；
+2. 修正 2 条无效行；
+3. 保存 5 条；
+4. 搜索 `MSTEN`，5 行；
+5. 新建 `MSTENNEW`；
+6. 编辑新建记录；
+7. 单删新建记录；
+8. 当前页批量删除 2 条，剩 3 行；
+9. `/web-basics` 加载；
+10. `/servlet-demo` 加载；
+11. 分页通过 11 条 UI 实测（total 11，page2 1 行）。
+
+实际脚本累计约 **23.5 秒**；不是现场讲解的 10 分钟。
+
+## 5. 数据清理
+
+本轮主键：
+
+- CRUD：1、2、3、4、5；
+- 5/10 UI：15～23；
+- API 分页：24、25、26；
+- UI 分页：27～37。
+
+清理前保存 `db-state-before-cleanup.txt`；按主键定向 DELETE，最终：
+
+```text
+SELECT COUNT(*) FROM express_address;  → 0
+```
+
+## 6. 证据
+
+- `docs/test-results/ms-10/api-crud-evidence.json`
+- `docs/test-results/ms-10/pagination-evidence.json`
+- `docs/test-results/ms-10/pagination-ui-ids.json`
+- `docs/test-results/ms-10/ui-demo-evidence.json`
+- `docs/test-results/ms-10/db-state-before-cleanup.txt`
+- `docs/test-results/ms-10/five-*.png`、`ten-*.png`
+- `docs/test-results/ms-10/run-demo.mjs`
+
+## 7. 未执行/限制
+
+- 未对 MySQL 配置/插件/账号/防火墙做任何修改；
+- 未 DROP/TRUNCATE/全表 DELETE；
+- D08 仍 P1 OPEN；
+- AC-30 仍 PARTIAL；
+- MS-09 仍 PARTIAL；
+- CI NOT RUN；
+- 项目正式验收仍未达到。

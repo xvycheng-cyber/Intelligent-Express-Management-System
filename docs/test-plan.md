@@ -309,7 +309,7 @@ BUILD SUCCESS
 | AC-25 | 批量录入端到端流程 | P0 | FR-01～06 | MS04、`ms08-e2e-check.mjs` | PASS |
 | AC-26 | 地址簿端到端流程 | P0 | FR-07～14 | MS05、`ms08-e2e-check.mjs` | PASS |
 | AC-27 | Web 基础实践回归 | P0 | FR-15、FR-16 | MS06.2～06.9 | PASS |
-| AC-28 | Servlet URI 映射回归 | P0 | FR-17、课程 2.20 | MS07 后端 12 + 浏览器；Allow 回归 | PASS |
+| AC-28 | Servlet URI 映射回归 | P0 | FR-17、课程 2.20 | MS07 后端 14 + 浏览器；Allow 回归 | PASS |
 | AC-29 | API 契约与异常处理 | P0 | FR-18、FR-19 | 统一 R/violations、异常状态 | PASS |
 | AC-30 | 安全与数据保护 | P1 | FR-20、BR-16/20/22、NFR-05/11 | 安全扫描、监听、账号、错误响应；MySQL X 33060 暴露 | **PARTIAL（P1 未关闭）** |
 | AC-31 | 性能与浏览器兼容性 | P1 | NFR-01、NFR-03 | `ms08-perf-check.mjs`；Chrome/Edge 完整矩阵 | PASS |

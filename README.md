@@ -26,7 +26,7 @@
 | MS-08-R1 补充核验 | 已完成 |
 | MS-08-R2 风险分析/人工方案 | 已完成 |
 | MS-09 论文与截图 | **PARTIAL**：正文、Word/PDF 已生成；封面信息待填，2.21 四张业务截图 BLOCKED |
-| MS-10 验收与答辩准备 | **PARTIAL**：验收/演示/Q&A 材料已生成；实际 DB 演示 BLOCKED |
+| MS-10 验收与答辩准备 | **PASS（实际演示完成）**；项目正式验收仍受 D08/MS-09/CI 限制 |
 | 后端测试 | **160 tests，0 failures/errors/skips**（隔离 Schema） |
 | 前端构建 | `npm run build` 通过 |
 | Chrome / Edge | Chrome 全量回归；Edge 完整矩阵通过 |
@@ -400,7 +400,7 @@ MS08_PERF_OK
 | MS-07 Servlet 映射 | 已完成 | 2.20，三个真实 Servlet + Spring MVC 对照 |
 | MS-08 全量测试 | 已实施，未正式结束 | 160 tests、Chrome/Edge、E2E、性能；D08 P1 OPEN |
 | MS-09 论文与截图 | PARTIAL | 正文/Word/PDF 已生成；封面信息与 2.21 四图 BLOCKED |
-| MS-10 验收与答辩 | PARTIAL | 验收矩阵、环境/复现/数据安全、5/10 分钟脚本、46 题 Q&A、故障/证据已交付；实际 DB 演示 BLOCKED |
+| MS-10 验收与答辩 | PASS（实际演示完成） | 验收材料、CRUD、5/10 核心流程、分页、数据清理完成；项目正式验收仍受 D08/MS-09/CI 限制 |
 
 **MS-08 状态：** AC-30 = PARTIAL；AC-31 = PASS；AC-32 = PASS（本地验证，CI NOT RUN）；D08 = OPEN，P1。
 MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处置；尚未完成第二台物理设备远程验证；用户尚未授权修改 MySQL/防火墙；不能声称外部登录成功或 MS-08 无条件通过。
@@ -443,7 +443,7 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 
 ![Servlet 映射](docs/screenshots/2-20-servlet-mapping.png)
 
-> 地址列表、编辑弹窗、删除确认、批量删除确认四张 2.21 业务截图因本轮未启动 MySQL 而 **BLOCKED**；README 不伪造或复用旧图。详见 `docs/paper/ms-09-missing-information.md`。
+> 地址列表、编辑弹窗、删除确认、批量删除确认四张 2.21 业务截图仍是 MS-09 的 BLOCKED 项；MS-10 已在授权后启动 MySQL 完成 CRUD/演示，但未擅自补拍论文截图。README 不伪造或复用旧图。详见 `docs/paper/ms-09-missing-information.md`。
 
 ---
 
@@ -483,10 +483,10 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 | 里程碑 | 当前状态 | 内容 |
 | --- | --- | --- |
 | MS-09 | PARTIAL | 论文正文/Word/PDF 已生成；封面信息、2.21 四张业务截图、PDF 目录待补 |
-| MS-10 | PARTIAL | 材料已完成；MySQL 未启动导致保存/列表/编辑/删除演示 BLOCKED |
+| MS-10 | PASS（实际演示完成） | 文档、CRUD、5/10 核心流程、分页完成；项目正式验收仍受 D08/MS-09/CI 限制 |
 | D08 | P1 OPEN | MySQL X Plugin 33060/防火墙风险待用户授权处置 |
 
-**MS-08 尚未正式结束；MS-09 未正式通过；MS-10 为 PARTIAL，实际 DB 演示未完成，项目未达到正式验收条件。**
+**MS-08 尚未正式结束；MS-09 未正式通过；MS-10 实际演示完成；项目仍因 D08/AC-30/MS-09/CI 未正式验收。**
 
 ---
 

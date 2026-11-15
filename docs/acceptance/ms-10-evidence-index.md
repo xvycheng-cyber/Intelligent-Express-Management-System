@@ -60,6 +60,15 @@
 | MS-09 交付报告 | `docs/review/ms-09-final-delivery-report.md` | EXISTS |
 | MS-09 Word/PDF | `deliverables/MS-09/` | EXISTS |
 | MS-10 演练 | `docs/test-results/ms-10/demo-rehearsal-report.md` | EXISTS |
+| MS-10-R1 复核 | `docs/review/ms-10-r1-independent-review-report.md` | EXISTS |
+| MS-10-R2 整改 | `docs/review/ms-10-r2-correction-report.md` | EXISTS |
+| MS-10-R2 终审 | `docs/review/ms-10-r2-final-review-report.md` | EXISTS |
+| MS-10 API CRUD | `docs/test-results/ms-10/api-crud-evidence.json` | EXISTS |
+| MS-10 API 分页 | `docs/test-results/ms-10/pagination-evidence.json` | EXISTS |
+| MS-10 UI 分页 | `docs/test-results/ms-10/pagination-ui-evidence.txt` | EXISTS |
+| MS-10 UI 5/10 证据 | `docs/test-results/ms-10/ui-demo-evidence.json` | EXISTS |
+| MS-10 UI 截图 | `docs/test-results/ms-10/five-*.png`、`ten-*.png` | EXISTS |
+| MS-10 清理前 DB | `docs/test-results/ms-10/db-state-before-cleanup.txt` | EXISTS |
 
 ---
 

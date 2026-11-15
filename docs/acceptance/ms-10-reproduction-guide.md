@@ -19,7 +19,11 @@ cd Intelligent-Express-Management-System
 
 ## 2. 检查版本
 
+先固定 JDK 17 与 Maven 路径，避免系统默认 Java 26：
+
 ```powershell
+$env:JAVA_HOME = "C:\Users\Chengzi\AppData\Local\Temp\dsh-ms01-tools\jdk17\jdk-17.0.21+9"
+$env:Path = "$env:JAVA_HOME\bin;C:\Users\Chengzi\AppData\Local\Programs\IntelliJ IDEA\plugins\maven\lib\maven3\bin;$env:Path"
 java -version
 mvn -v
 node -v
@@ -33,16 +37,12 @@ npm -v
 - Node 20/22 LTS；
 - MySQL 8.0.x。
 
-本机 JDK 17 路径：
+本机 JDK 17、Maven 与 Node 路径：
 
 ```text
-C:\Users\Chengzi\AppData\Local\Temp\dsh-ms01-tools\jdk17\jdk-17.0.21+9
-```
-
-本机 Maven：
-
-```text
-C:\Users\Chengzi\AppData\Local\Programs\IntelliJ IDEA\plugins\maven\lib\maven3\bin\mvn.cmd
+Java:  C:\Users\Chengzi\AppData\Local\Temp\dsh-ms01-tools\jdk17\jdk-17.0.21+9
+Maven: C:\Users\Chengzi\AppData\Local\Programs\IntelliJ IDEA\plugins\maven\lib\maven3\bin\mvn.cmd
+Node:  C:\Users\Chengzi\AppData\Local\Temp\dsh-ms01-tools\node22\node-v22.14.0-win-x64
 ```
 
 ## 3. 准备 MySQL
@@ -50,13 +50,21 @@ C:\Users\Chengzi\AppData\Local\Programs\IntelliJ IDEA\plugins\maven\lib\maven3\b
 > 本阶段不启动 MySQL。以下命令由用户在已启动的本机 MySQL 上执行。
 
 ```powershell
-mysql -u root -p < backend/src/main/resources/db/schema.sql
+cmd /c '"E:\mysql\install_directory\bin\mysql.exe" -u root -p < backend\src\main\resources\db\schema.sql'
 ```
 
 可选脱敏演示数据：
 
 ```powershell
-mysql -u root -p express_address_book < backend/src/main/resources/db/data.sql
+cmd /c '"E:\mysql\install_directory\bin\mysql.exe" -u root -p express_address_book < backend\src\main\resources\db\data.sql'
+```
+
+MySQL 工具实际路径：
+
+```text
+mysql.exe      E:\mysql\install_directory\bin\mysql.exe
+mysqldump.exe  E:\mysql\install_directory\bin\mysqldump.exe
+mysqlcheck.exe E:\mysql\install_directory\bin\mysqlcheck.exe
 ```
 
 注意：

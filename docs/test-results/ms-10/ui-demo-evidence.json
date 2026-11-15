@@ -1,0 +1,99 @@
+{
+  "evidence": {
+    "five": [
+      {
+        "step": "parse",
+        "detail": "rows=3",
+        "status": "PASS",
+        "atMs": 1808
+      },
+      {
+        "step": "save-dialog",
+        "detail": "确认保存地址\n\n请确认提交数量与异常行；无效记录不会进入保存请求。\n\n有效记录\n3\n人工修改\n1\n原解析 INVALID\n1\n待修正行\n0\n全部 3 条记录已通",
+        "status": "PASS",
+        "atMs": 2121
+      },
+      {
+        "step": "save",
+        "detail": "已保存\n3\n条地址。当前内容再次保存前请先修改，避免重复提交。",
+        "status": "PASS",
+        "atMs": 2941
+      },
+      {
+        "step": "list-search",
+        "detail": "rows=3",
+        "status": "PASS",
+        "atMs": 4710
+      },
+      {
+        "step": "edit",
+        "detail": "first record address updated",
+        "status": "PASS",
+        "atMs": 7212
+      },
+      {
+        "step": "delete",
+        "detail": "rows=2",
+        "status": "PASS",
+        "atMs": 9199
+      }
+    ],
+    "ten": [
+      {
+        "step": "parse",
+        "detail": "rows=5",
+        "status": "PASS",
+        "atMs": 10829
+      },
+      {
+        "step": "save",
+        "detail": "已保存\n5\n条地址。当前内容再次保存前请先修改，避免重复提交。",
+        "status": "PASS",
+        "atMs": 12204
+      },
+      {
+        "step": "list-search",
+        "detail": "rows=5",
+        "status": "PASS",
+        "atMs": 13993
+      },
+      {
+        "step": "create",
+        "detail": "MSTENNEW created",
+        "status": "PASS",
+        "atMs": 16519
+      },
+      {
+        "step": "edit",
+        "detail": "MSTENNEW edited",
+        "status": "PASS",
+        "atMs": 18167
+      },
+      {
+        "step": "single-delete",
+        "detail": "rows=5",
+        "status": "PASS",
+        "atMs": 20128
+      },
+      {
+        "step": "batch-delete",
+        "detail": "rows=3",
+        "status": "PASS",
+        "atMs": 21793
+      },
+      {
+        "step": "web-basics",
+        "detail": "web-basics-page loaded",
+        "status": "PASS",
+        "atMs": 22585
+      },
+      {
+        "step": "servlet-demo",
+        "detail": "servlet-demo-page loaded",
+        "status": "PASS",
+        "atMs": 23439
+      }
+    ]
+  },
+  "elapsedMs": 23493
+}
