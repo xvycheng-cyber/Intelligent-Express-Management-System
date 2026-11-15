@@ -8,7 +8,7 @@
 
 ## 二、当前阶段
 
-MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端、MS-03.1 契约修复、MS-04 批量录入前端与 MS-05 地址簿管理前端已完成。批量录入、地址查询/搜索/分页、新建/编辑/删除/批量删除已实现；Playwright CI、用户登录尚未开发。
+MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端、MS-03.1 契约修复、MS-04 批量录入前端、MS-05 地址簿管理前端、MS-06 Web 基础实践、MS-07 Servlet 映射演示和 MS-08 全量测试已完成。批量录入、地址查询/搜索/分页、新建/编辑/删除/批量删除、Web 实践 2.1～2.19、Servlet 映射 2.20 已实现；MS-08 仍有一个 P1（MySQL X Plugin 33060/防火墙暴露）待用户处置；Playwright CI 尚未实际运行，用户登录仍不在本项目范围。
 
 ### 技术栈
 
@@ -75,7 +75,7 @@ MS-01 工程初始化、MS-02 解析模块、MS-03 地址簿后端、MS-03.1 契
 - 后端优先 `mvn clean test`，必要时 `mvn clean package`。
 - 前端 `npm run build`。
 - 未实际执行的测试不得标记为通过；Parser 单测、Controller 集成、数据库集成、浏览器测试必须区分。
-- 当前基线：146 个后端测试全部通过；`npm run build` 通过；`frontend/scripts/ms04-browser-check.mjs` 与 `ms05-browser-check.mjs` 已用本机 Chrome + Playwright 实际跑通录入与地址簿流程；MySQL 使用独立测试库；Playwright 尚未纳入 CI。
+- 当前基线：**160** 个后端测试全部通过；`npm run build` 通过；MS04/MS05/MS06/MS07 Playwright 回归与核心 E2E 已实际执行；MySQL 使用隔离 Schema `express_address_book_ms08_test`；Playwright CI 尚未实际运行。
 
 ## 九、文档与变更
 

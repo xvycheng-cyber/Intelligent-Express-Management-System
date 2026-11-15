@@ -14,6 +14,9 @@ node_modules/
 # ===== 测试产物 =====
 test-results/
 playwright-report/
+# MS-08 的测试证据随文档保留；Playwright 临时产物仍忽略
+!docs/test-results/
+!docs/test-results/**
 
 # ===== 日志 =====
 *.log

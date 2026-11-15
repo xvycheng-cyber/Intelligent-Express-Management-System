@@ -14,8 +14,8 @@
 | 里程碑 | 当前状态 | 证据 |
 | --- | --- | --- |
 | MS-06 Web 实践页 | TESTED | 2.1～2.19；MS06.2～MS06.9 浏览器回归；`2-01`～`2-19` 截图 |
-| MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；158 后端测试；`2-20-*` 截图 |
-| MS-08 全量测试 | PARTIAL | MS06/MS07/MS04/MS05 已执行；尚未正式汇总/CI |
+| MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；160 后端测试；`2-20-*` 截图 |
+| MS-08 全量测试 | PARTIAL（P1 D08） | 160 后端测试、MS04/05/06/07 回归、E2E、性能/Edge 通过；MySQL X 33060 暴露待用户人工处置；AC-30 PARTIAL |
 | MS-09 论文/截图 | NOT_STARTED | 仅论文大纲 |
 | MS-10 验收/答辩 | NOT_STARTED | 未开始 |
 
@@ -24,7 +24,7 @@
 ```text
 前端：/servlet-demo 可用，导航 active；真实 fetch /demo/**
 后端：/demo/servlet/exact、/demo/servlet/*、*.smap、/demo/spring/*
-测试：TC-SERVLET-01～013 PASS；Maven 158 PASS；MS04/MS05/MS06 回归 PASS
+测试：TC-SERVLET-01～013 PASS；Maven 160 PASS；MS04/MS05/MS06 回归 PASS
 截图：docs/screenshots/2-20-servlet-mapping*.png
 ```
 
@@ -45,7 +45,7 @@ MS-04 批量录入前端     TESTED
 MS-05 地址簿前端       TESTED，但代码未提交 Git；没有正式验收
 MS-06 Web 实践页       NOT_STARTED
 MS-07 Servlet 演示     NOT_STARTED
-MS-08 全量测试         PARTIAL
+MS-08 全量测试         PARTIAL（P1 D08；160 后端测试/Playwright/E2E/性能已执行）
 MS-09 论文/截图        NOT_STARTED
 MS-10 验收/答辩        NOT_STARTED
 ```

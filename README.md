@@ -6,9 +6,9 @@
 
 ## 当前状态
 
-**MS-01 工程初始化、MS-02 地址解析、MS-03 地址簿后端、MS-03.1 契约修复、MS-04 批量录入前端与 MS-05 地址簿管理前端已完成（2026-11-14）**。当前包含可启动的 Spring Boot 后端、可启动的 Vue 3 前端、批量地址录入页面、地址簿列表/搜索/分页/新建/编辑/删除/批量删除页面，以及后端地址 CRUD 接口。
+**MS-01～MS-08 已完成（2026-11-15）**。当前包含可启动的 Spring Boot 后端、Vue 3 前端、批量地址录入、地址簿管理、Web 基础实践 2.1～2.19、Servlet URI 映射演示 2.20，以及真实浏览器测试和性能证据。**MS-08 仍有 1 个 P1：MySQL X Plugin 33060/防火墙暴露，需用户授权处置。** 人工处置指南见 [`docs/security/ms-08-mysqlx-risk-and-manual-remediation.md`](docs/security/ms-08-mysqlx-risk-and-manual-remediation.md)。
 
-实际测试：`mvn clean test` 共 **146** 个测试（parser 86 + Controller MockMvc 12 + 真实 Parser/HTTP 8 + MySQL 16 + DTO 10 + LIKE 4 + 码点 5 + 基础 5），全部通过；前端 `npm run build` 通过。
+实际测试（MS-08）：`mvn clean test` 共 **160** 个测试通过；MS04/MS05/MS06/MS07 Playwright 回归通过；核心 E2E、Chrome/Edge 兼容矩阵、性能测试通过；前端 `npm run build` 通过。数据库测试使用隔离 Schema `express_address_book_ms08_test`，主库未修改。CI 尚未实际运行。
 
 设计文档入口：[`docs/requirements.md`](docs/requirements.md)、[`docs/architecture.md`](docs/architecture.md)、[`docs/database-design.md`](docs/database-design.md)、[`docs/api-design.md`](docs/api-design.md)、[`docs/parser-design.md`](docs/parser-design.md)、[`docs/test-plan.md`](docs/test-plan.md)、[`docs/development-roadmap.md`](docs/development-roadmap.md)、[`docs/course-paper-outline.md`](docs/course-paper-outline.md)。
 

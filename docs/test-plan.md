@@ -293,3 +293,73 @@ BUILD SUCCESS
 - 性能只做了临时 100 行探针（约 1.30ms/次），不是正式压测。
 - MS-03 已实现地址 CRUD、分页搜索、批量保存/删除；MS-04/MS-05 已实现批量录入与地址簿管理前端及 Playwright 端到端脚本；Playwright CI 尚未实现。
 - MySQL 测试使用独立 `express_address_book_test`；主库未被测试写入。
+
+---
+
+## 10. MS-08 项目推导验收标准 AC-21～AC-32
+
+> 以下 AC 根据 `requirements.md` 的 CR/FR/BR/NFR 与 MS-08 路线图推导，是项目级验收标准，不是课程任务书原文。
+
+| 编号 | 验收内容 | 优先级 | 主要依据 | 对应测试/证据 | 状态 |
+| --- | --- | --- | --- | --- | --- |
+| AC-21 | 地址解析正确性 | P0 | FR-01～03、BR-01～08 | Parser 86 tests；MS08 全量 | PASS |
+| AC-22 | 解析 API 输入边界 | P0 | FR-02、BR-05、NFR-02 | Controller/HTTP、200/201 限制 | PASS |
+| AC-23 | 地址 CRUD、分页与搜索 | P0 | FR-07～13、BR-10～14 | AddressApiMysqlTest、MS05 | PASS |
+| AC-24 | 批量事务与服务端校验 | P0 | FR-05、FR-19、BR-09/11/12 | 真实 MySQL 事务、201 拒绝 | PASS |
+| AC-25 | 批量录入端到端流程 | P0 | FR-01～06 | MS04、`ms08-e2e-check.mjs` | PASS |
+| AC-26 | 地址簿端到端流程 | P0 | FR-07～14 | MS05、`ms08-e2e-check.mjs` | PASS |
+| AC-27 | Web 基础实践回归 | P0 | FR-15、FR-16 | MS06.2～06.9 | PASS |
+| AC-28 | Servlet URI 映射回归 | P0 | FR-17、课程 2.20 | MS07 后端 12 + 浏览器；Allow 回归 | PASS |
+| AC-29 | API 契约与异常处理 | P0 | FR-18、FR-19 | 统一 R/violations、异常状态 | PASS |
+| AC-30 | 安全与数据保护 | P1 | FR-20、BR-16/20/22、NFR-05/11 | 安全扫描、监听、账号、错误响应；MySQL X 33060 暴露 | **PARTIAL（P1 未关闭）** |
+| AC-31 | 性能与浏览器兼容性 | P1 | NFR-01、NFR-03 | `ms08-perf-check.mjs`；Chrome/Edge 完整矩阵 | PASS |
+| AC-32 | 工程质量与交付复现 | P1 | NFR-06～10、DoD | build/160 tests/脚本/证据；CI 未运行 | PASS（CI 为 P2） |
+
+### 10.1 通过条件
+
+- AC-21～AC-29：对应测试全部通过，无 P0/P1；
+- AC-30：无硬编码凭据、无未转义 HTML、无主库写入；但 MySQL X Plugin 33060 监听 `0.0.0.0`，且防火墙存在 mysqld 全端口入站允许，**PARTIAL/P1**；无认证不作为缺陷；
+- AC-31：100 行解析 P95 ≤300ms；1 万条查询 P95 ≤500ms；Chrome 与 Edge 5 宽度/页面矩阵通过；
+- AC-32：build、后端全量测试、Playwright、证据目录和文档可复现；CI 未运行记为 P2。
+
+---
+
+## 11. MS-08 R1～R5 测试轮次
+
+| 轮次 | 范围 | 执行状态 |
+| --- | --- | --- |
+| R1 | Git 基线、环境、隔离测试库、测试资产、AC 定义、追踪矩阵 | 完成 |
+| R2 | L1 Parser、L2 MockMvc/真实 HTTP、DTO/Unicode/LIKE、L3 MySQL、事务 | 完成：160 tests |
+| R3 | MS04、MS05、MS06、MS07、核心 E2E | 完成：全部 BROWSER_OK / `MS08_E2E_OK` |
+| R4 | TC-SEC、TC-PERF、浏览器兼容性、响应式 | 完成（Edge 完整矩阵）；CI NOT RUN；AC-30 PARTIAL/P1 |
+| R5 | P0/P1/P2 缺陷、405 Allow、构建、全量回归、证据归档 | 完成；见 MS-08 报告 |
+
+### 11.1 层级边界
+
+- L1 Parser 单测：纯内存；
+- L2 MockMvc：Controller 契约；
+- L2 真实 Parser + HTTP：Spring Boot 真实 HTTP；
+- L3 MySQL：独立 `express_address_book_ms08_test`；
+- L4 Playwright：真实浏览器 + 真实后端；
+- 测试中的 Playwright 路由模拟只用于故障注入，不冒充真实业务响应。
+
+---
+
+## 12. MS-08-R2 人工处置验收（PENDING）
+
+D08 的 MySQL X Plugin/防火墙风险尚未处置；人工指南：
+
+[`docs/security/ms-08-mysqlx-risk-and-manual-remediation.md`](security/ms-08-mysqlx-risk-and-manual-remediation.md)
+
+| 编号 | 内容 | 当前状态 |
+| --- | --- | --- |
+| R2-01 | X Plugin 已禁用或仅本机监听 | PENDING |
+| R2-02 | 无不必要宽泛 mysqld 入站规则 | PENDING |
+| R2-03 | 33060 不对 LAN 开放 | PENDING |
+| R2-04 | 3306 保持本机监听 | PENDING |
+| R2-05 | 项目 JDBC 正常 | PENDING |
+| R2-06 | Maven 160 通过 | PENDING（处置后重跑） |
+| R2-07 | 主库/旧测试库未修改 | PENDING（处置后核对） |
+| R2-08 | 配置/防火墙/监听/回归证据完整 | PENDING |
+
+R2 只能在用户完成人工处置并再次授权后执行；不得将本表预填为 PASS。

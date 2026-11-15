@@ -253,13 +253,13 @@
 | `docs/review/p0-finalization-report.md` | ✅ 已完成 | 第二轮遗留修复报告 |
 | `.gitignore` | ✅ 已完成 | P0 修订（F-10） |
 | `README.md` | ✅ 已完成 | P0 修订（F-10） |
-| 后端工程 | ⬜ 待开发 | MS-01～MS-03 |
-| 前端工程 | ⬜ 待开发 | MS-01、MS-04、MS-05 |
-| Web 实践页 | ⬜ 待开发 | MS-06 |
-| Servlet 演示 | ⬜ 待开发 | MS-07 |
-| 测试记录 | ⬜ 待执行 | MS-08 |
+| 后端工程 | ✅ 已完成 | MS-01～MS-03 |
+| 前端工程 | ✅ 已完成 | MS-01、MS-04、MS-05 |
+| Web 实践页 | ✅ 已完成 | MS-06 |
+| Servlet 演示 | ✅ 已完成 | MS-07 |
+| 测试记录 | ⚠ MS-08 已执行但 D08 P1 待处置 | MS-08；AC-30 PARTIAL；CI 未运行 |
 | 论文 | ⬜ 待撰写 | MS-09 |
-| `docs/screenshots/` | ⬜ 待采集 | 无截图不得写论文效果图 |
+| `docs/screenshots/` | ✅ 2.1～2.20 已采集 | MS-06/MS-07 |
 
 ---
 

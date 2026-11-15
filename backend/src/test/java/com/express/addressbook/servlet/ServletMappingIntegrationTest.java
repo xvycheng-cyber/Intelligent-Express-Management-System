@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,6 +114,7 @@ class ServletMappingIntegrationTest {
         ResponseEntity<String> response = rest.exchange(
                 url("/demo/servlet/exact"), HttpMethod.POST, HttpEntity.EMPTY, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
+        assertThat(response.getHeaders().getFirst(HttpHeaders.ALLOW)).contains("GET");
     }
 
     @Test
@@ -120,6 +122,7 @@ class ServletMappingIntegrationTest {
         ResponseEntity<String> response = rest.exchange(
                 url("/demo/servlet/prefix/a"), HttpMethod.POST, HttpEntity.EMPTY, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
+        assertThat(response.getHeaders().getFirst(HttpHeaders.ALLOW)).contains("GET");
     }
 
     @Test
@@ -128,6 +131,7 @@ class ServletMappingIntegrationTest {
         ResponseEntity<Map> response = rest.exchange(
                 url("/demo/spring/method-only"), HttpMethod.POST, HttpEntity.EMPTY, Map.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
+        assertThat(response.getHeaders().getFirst(HttpHeaders.ALLOW)).contains("GET");
         assertThat(response.getBody()).isNotNull();
         assertThat(((Map<String, Object>) response.getBody()).get("code")).isEqualTo(40501);
     }
@@ -147,5 +151,32 @@ class ServletMappingIntegrationTest {
         assertThat(body.get("handler")).isEqualTo("ExactMappingDemoServlet");
         assertThat(body.get("mappingType")).isEqualTo("EXACT");
         assertThat(body.get("query")).isEqualTo("trace=query-42");
+    }
+
+    @Test
+    void exactHeadAndOptionsAdvertiseOnlyActualMethods() {
+        ResponseEntity<String> head = rest.exchange(
+                url("/demo/servlet/exact"), HttpMethod.HEAD, HttpEntity.EMPTY, String.class);
+        assertThat(head.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> options = rest.exchange(
+                url("/demo/servlet/exact"), HttpMethod.OPTIONS, HttpEntity.EMPTY, String.class);
+        assertThat(options.getStatusCode()).isEqualTo(HttpStatus.OK);
+        String allow = options.getHeaders().getFirst(HttpHeaders.ALLOW);
+        assertThat(allow).contains("GET", "HEAD", "OPTIONS");
+        assertThat(allow).doesNotContain("POST");
+    }
+
+    @Test
+    void springHeadAndOptionsAreSupported() {
+        ResponseEntity<String> head = rest.exchange(
+                url("/demo/spring/info"), HttpMethod.HEAD, HttpEntity.EMPTY, String.class);
+        assertThat(head.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<String> options = rest.exchange(
+                url("/demo/spring/info"), HttpMethod.OPTIONS, HttpEntity.EMPTY, String.class);
+        assertThat(options.getStatusCode()).isEqualTo(HttpStatus.OK);
+        String allow = options.getHeaders().getFirst(HttpHeaders.ALLOW);
+        assertThat(allow).contains("GET", "HEAD", "OPTIONS");
     }
 }

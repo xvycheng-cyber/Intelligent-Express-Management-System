@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,8 +20,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 全局异常处理：所有 /api/** 错误返回统一外层结构。
@@ -117,7 +120,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<R<Object>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
-        return build(ResultCode.METHOD_NOT_ALLOWED.code(), "请求方法不支持", null);
+        ResponseEntity.BodyBuilder builder = ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED);
+        if (ex.getSupportedHttpMethods() != null && !ex.getSupportedHttpMethods().isEmpty()) {
+            Set<String> allowed = new LinkedHashSet<>();
+            ex.getSupportedHttpMethods().forEach(method -> allowed.add(method.name()));
+            if (allowed.contains("GET")) {
+                allowed.add("HEAD");
+            }
+            allowed.add("OPTIONS");
+            builder.header(HttpHeaders.ALLOW, String.join(", ", allowed));
+        }
+        return builder.body(R.fail(ResultCode.METHOD_NOT_ALLOWED.code(), "请求方法不支持", null));
     }
 
     @ExceptionHandler(DataAccessException.class)

@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-11-14T16:18:31.932Z",
+  "api": "http://127.0.0.1:8080/api",
+  "runtime": {
+    "node": "v22.14.0",
+    "cpu": "Intel(R) Core(TM) Ultra 7 265K",
+    "cpuCount": 20,
+    "totalMemoryMB": 32229
+  },
+  "sample": {
+    "parserLines": 100,
+    "queryPageSize": 10,
+    "warmupRuns": 2,
+    "measuredRuns": 30
+  },
+  "parser": {
+    "name": "100-line parse over HTTP",
+    "count": 30,
+    "targetMs": 300,
+    "averageMs": 3.19,
+    "medianMs": 2.97,
+    "p95Ms": 5.33,
+    "maxMs": 5.39,
+    "minMs": 2.38,
+    "pass": true
+  },
+  "list": {
+    "name": "address list page (10000-row dataset)",
+    "count": 30,
+    "targetMs": 500,
+    "averageMs": 5.14,
+    "medianMs": 5.01,
+    "p95Ms": 5.82,
+    "maxMs": 6.46,
+    "minMs": 4.52,
+    "pass": true
+  }
+}
