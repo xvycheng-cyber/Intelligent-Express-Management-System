@@ -16,7 +16,7 @@
 | MS-06 Web 实践页 | TESTED | 2.1～2.19；MS06.2～MS06.9 浏览器回归；`2-01`～`2-19` 截图 |
 | MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；160 后端测试；`2-20-*` 截图 |
 | MS-08 全量测试 | PARTIAL（P1 D08） | 160 后端测试、MS04/05/06/07 回归、E2E、性能/Edge 通过；MySQL X 33060 暴露待用户人工处置；AC-30 PARTIAL |
-| MS-09 论文/截图 | NOT_STARTED | 仅论文大纲 |
+| MS-09 论文/截图 | PARTIAL | 正文/Word/PDF 已生成；封面信息与 2.21 四个业务截图 BLOCKED |
 | MS-10 验收/答辩 | NOT_STARTED | 未开始 |
 
 当前实现事实：
@@ -46,7 +46,7 @@ MS-05 地址簿前端       TESTED，但代码未提交 Git；没有正式验收
 MS-06 Web 实践页       NOT_STARTED
 MS-07 Servlet 演示     NOT_STARTED
 MS-08 全量测试         PARTIAL（P1 D08；160 后端测试/Playwright/E2E/性能已执行）
-MS-09 论文/截图        NOT_STARTED
+MS-09 论文/截图        PARTIAL（正文/Word/PDF；封面信息与 2.21 四图 BLOCKED）
 MS-10 验收/答辩        NOT_STARTED
 ```
 
@@ -70,7 +70,7 @@ MS-10 验收/答辩        NOT_STARTED
 | MS-06 Web 实践页 | NOT_STARTED | 无 `WebBasicsView`/`WireframeView` | 无 | 无 | 未开始 |
 | MS-07 Servlet 演示 | NOT_STARTED | 无 `servlet/`、`demo/` 文件 | 无 | 无 | 未开始 |
 | MS-08 全量测试 | PARTIAL | 有分散测试/脚本 | 无 R1～R5 汇总、无 CI | 无 | 部分 |
-| MS-09 论文/截图 | NOT_STARTED | 只有论文大纲 | `docs/screenshots` 不存在 | 无 | 未开始 |
+| MS-09 论文/截图 | PARTIAL | 正文、Word/PDF、真实截图 | 2.21 列表/编辑/删除/批删 BLOCKED；封面待补 | 无 | 初稿已生成 |
 | MS-10 验收/答辩 | NOT_STARTED | 无演示脚本/Q&A | 无 | 无 | 未开始 |
 
 **状态定义**：IMPLEMENTED = 代码存在；TESTED = 有测试/构建/浏览器执行证据；ACCEPTED = 明确正式验收；PARTIAL = 部分；NOT_STARTED = 未开始；BLOCKED = 有阻塞证据。
