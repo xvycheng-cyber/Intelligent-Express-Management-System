@@ -120,6 +120,16 @@ while i < len(lines):
     raw = lines[i]
     line = raw.rstrip()
 
+    if in_toc and line == "---":
+        in_toc = False
+        skip_toc = False
+        i += 1
+        continue
+
+    if in_toc:
+        i += 1
+        continue
+
     if line == "---":
         i += 1
         continue
@@ -140,14 +150,14 @@ while i < len(lines):
 
     if line.startswith("## "):
         text = line[3:].strip()
-        if text in ("摘要", "目录"):
+        if text == "摘要":
             doc.add_page_break()
         add_heading(2, text)
         if text == "目录":
             in_toc = True
             skip_toc = True
             p = doc.add_paragraph()
-            add_field(p, 'TOC \\o "1-3" \\h \\z \\u', "目录将在 Word 中更新")
+            add_field(p, 'TOC \\o "1-2" \\h \\z \\u', "目录将在 Word 中更新")
         i += 1
         continue
 

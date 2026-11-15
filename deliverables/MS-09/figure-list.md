@@ -30,10 +30,10 @@
 | 24 | 智能录入页 | `2-21-import.png` | 真实截图 |
 | 25 | 解析结果 | `2-21-parse-result.png` | 真实截图 |
 | 26 | 人工修改/保存确认 | `2-21-edit-preview.png` | 真实截图 |
-| 27 | 地址列表 | — | BLOCKED（未启动 MySQL） |
-| 28 | 编辑弹窗 | — | BLOCKED |
-| 29 | 删除确认 | — | BLOCKED |
-| 30 | 批量删除确认 | — | BLOCKED |
+| 27 | 地址列表 | 2-21-list.png | 真实截图 |
+| 28 | 编辑弹窗 | 2-21-edit-dialog.png | 真实截图 |
+| 29 | 删除确认 | 2-21-delete-confirm.png | 真实截图 |
+| 30 | 批量删除确认 | 2-21-batch-delete.png | 真实截图 |
 | 31 | Maven 测试记录 | `2-21-test-record.png` | 真实日志整理为报告截图 |
 
 ## 表

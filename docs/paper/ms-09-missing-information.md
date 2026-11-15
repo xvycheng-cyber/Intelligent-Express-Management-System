@@ -27,7 +27,8 @@
 
 ## 已知缺口
 
-- 2.21 的地址列表、编辑弹窗、删除确认、批量删除确认为 **BLOCKED**：本轮不得启动/重启 MySQL，无法安全采集真实业务数据库页面；不得用 Mock 或旧图替代。
+- 2.21 地址列表、编辑弹窗、删除确认、批量删除确认已由 MS-12 补齐真实截图；见 docs/screenshots/2-21-list.png、2-21-edit-dialog.png、2-21-delete-confirm.png、2-21-batch-delete.png。
+- 论文 Word/PDF 的目录/排版仍需最终复核；封面/个人信息仍为 USER DEFERRED。
 - 2.18 原网页参考图来自课程任务书附录4，已标注来源；本项目实现仍是经批准的快递通原创线框，不复制外部网页。
 - GitHub Actions CI 未运行；论文不写 CI 通过。
 - D08 P1 OPEN，AC-30 PARTIAL；论文不写系统完全安全或 MS-08 已正式结束。

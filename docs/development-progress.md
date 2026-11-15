@@ -9,15 +9,18 @@
 
 ---
 
-## 0. 当前状态（MS-07.5，2026-11-14）
+## 0. 当前状态（MS-10 关闭，2026-11-15）
 
 | 里程碑 | 当前状态 | 证据 |
 | --- | --- | --- |
 | MS-06 Web 实践页 | TESTED | 2.1～2.19；MS06.2～MS06.9 浏览器回归；`2-01`～`2-19` 截图 |
 | MS-07 Servlet 演示 | TESTED | 3 个 `@WebServlet` + Spring MVC 对照；`/servlet-demo`；TC-SERVLET-01～013；160 后端测试；`2-20-*` 截图 |
 | MS-08 全量测试 | PARTIAL（P1 D08） | 160 后端测试、MS04/05/06/07 回归、E2E、性能/Edge 通过；MySQL X 33060 暴露待用户人工处置；AC-30 PARTIAL |
-| MS-09 论文/截图 | PARTIAL | 正文/Word/PDF 已生成；封面信息与 2.21 四个业务截图 BLOCKED |
-| MS-10 验收/答辩 | PASS（实际演示完成） | 文档/CRUD/5-10/分页完成；项目正式验收仍受 D08/MS-09/CI 限制 |
+| MS-09 论文/截图 | COMPLETED | 四图/目录/Word/PDF 完成；封面 USER DEFERRED |
+| MS-10 验收/答辩 | **COMPLETED（阶段关闭）** | 文档/CRUD/5-10/分页完成；仅代表阶段工作完成 |
+| MS-11 最终交付核验 | **COMPLETED（审计收尾）** | 审计/追踪/剩余清单完成；项目整体仍 NOT READY（D08/AC-30） |
+| MS-12 论文/截图/PDF | **COMPLETED** | 四图/TOC/Word/PDF 完成；封面 USER DEFERRED |
+| 项目整体验收 | **NOT READY** | D08 P1 OPEN、AC-30 PARTIAL；CI P2 NOT RUN |
 
 当前实现事实：
 
@@ -30,9 +33,24 @@
 
 历史审计中 `MS-06 NOT_STARTED`、`MS-07 NOT_STARTED`、`/servlet-demo 不存在` 等表述不再适用于当前工作区；保留原文是为了保留审计历史。
 
+### 0.1 MS-10 阶段关闭结论
+
+- 阶段状态：**COMPLETED**；
+- 文档一致性整改：完成（P2-01～P2-04、P3-01～P3-03）；
+- 数据库业务演示：完成；
+- CRUD 核心功能核验：完成（新增/列表/分页/搜索/编辑/单删/批删/逻辑删除）；
+- 5 分钟及 10 分钟演示流程：完成核心功能步骤核验；自动化脚本耗时不能等同于现场答辩耗时；
+- 数据清理：完成本轮演示数据清理，最终 `express_address` 0 行；
+- MS-10-R2 整改报告/最终复核报告：已交付；
+- **项目整体验收仍为 NOT READY**：D08 P1 OPEN、AC-30 PARTIAL；CI 为 P2 NOT RUN，不是当前 AC-32 的硬性阻塞。
+
+**阶段关闭不等于项目正式验收通过。**
+
 ---
 
 ## 1. 当前开发位置（历史快照）
+
+> 本节是历史快照；其中 MS-10 的 `PASS（实际演示完成）` 是归档前的历史状态，当前状态以 §0 的 `COMPLETED（阶段关闭）` 为准。
 
 ```text
 MS-00 设计基线        ACCEPTED（设计文档冻结）
@@ -46,7 +64,7 @@ MS-05 地址簿前端       TESTED，但代码未提交 Git；没有正式验收
 MS-06 Web 实践页       NOT_STARTED
 MS-07 Servlet 演示     NOT_STARTED
 MS-08 全量测试         PARTIAL（P1 D08；160 后端测试/Playwright/E2E/性能已执行）
-MS-09 论文/截图        PARTIAL（正文/Word/PDF；封面信息与 2.21 四图 BLOCKED）
+MS-09 论文/截图        COMPLETED（四图/目录/Word/PDF；封面 USER DEFERRED）
 MS-10 验收/答辩        PASS（实际演示完成；项目正式验收受 D08/MS-09/CI 限制）
 ```
 
@@ -70,8 +88,9 @@ MS-10 验收/答辩        PASS（实际演示完成；项目正式验收受 D08
 | MS-06 Web 实践页 | NOT_STARTED | 无 `WebBasicsView`/`WireframeView` | 无 | 无 | 未开始 |
 | MS-07 Servlet 演示 | NOT_STARTED | 无 `servlet/`、`demo/` 文件 | 无 | 无 | 未开始 |
 | MS-08 全量测试 | PARTIAL | 有分散测试/脚本 | 无 R1～R5 汇总、无 CI | 无 | 部分 |
-| MS-09 论文/截图 | PARTIAL | 正文、Word/PDF、真实截图 | 2.21 列表/编辑/删除/批删 BLOCKED；封面待补 | 无 | 初稿已生成 |
-| MS-10 验收/答辩 | PASS（实际演示完成） | 文档/CRUD/5-10/分页完成 | 项目正式验收受 D08/MS-09/CI 限制 | 无 | 实际演示完成 |
+| MS-09 论文/截图 | COMPLETED | 四图、目录、Word/PDF | 封面 USER DEFERRED | 无 | MS-12 完成 |
+| MS-10 验收/答辩 | COMPLETED（阶段关闭） | 文档/CRUD/5-10/分页完成 | 项目整体验收 NOT READY（D08/AC-30；CI P2） | 无 | 实际演示完成 |
+| MS-11 最终交付核验 | COMPLETED（审计收尾） | 审计、追踪矩阵、剩余清单、交付清单 | 项目整体仍 NOT READY（D08/AC-30） | 无 | 审计完成 |
 
 **状态定义**：IMPLEMENTED = 代码存在；TESTED = 有测试/构建/浏览器执行证据；ACCEPTED = 明确正式验收；PARTIAL = 部分；NOT_STARTED = 未开始；BLOCKED = 有阻塞证据。
 
