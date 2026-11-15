@@ -26,11 +26,11 @@
 | MS-08-R1 补充核验 | 已完成 |
 | MS-08-R2 风险分析/人工方案 | 已完成 |
 | MS-09 论文与截图 | **PARTIAL**：正文、Word/PDF 已生成；封面信息待填，2.21 四张业务截图 BLOCKED |
-| MS-10 验收与答辩准备 | **未开始** |
+| MS-10 验收与答辩准备 | **PARTIAL**：验收/演示/Q&A 材料已生成；实际 DB 演示 BLOCKED |
 | 后端测试 | **160 tests，0 failures/errors/skips**（隔离 Schema） |
 | 前端构建 | `npm run build` 通过 |
 | Chrome / Edge | Chrome 全量回归；Edge 完整矩阵通过 |
-| 性能 | 100 行解析 P95 2.81ms；10000 条分页 P95 3.59ms（本机 30 样本） |
+| 性能 | 100 行解析 P95 2.81ms；10000 条数据集、pageSize=10 的分页 P95 3.59ms（本机 30 样本） |
 | GitHub Actions CI | **NOT RUN** |
 | D08 / AC-30 | **P1 OPEN / PARTIAL** |
 | AC-31 / AC-32 | PASS / PASS（本地验证，CI NOT RUN） |
@@ -170,10 +170,9 @@ Intelligent-Express-Management-System/
 │   ├── review/                # 各里程碑审计与交付报告
 │   ├── security/              # D08 风险与人工处置指南
 │   ├── test-results/          # 测试与性能原始记录
-│   ├── paper/                 # MS-09 论文源稿与缺信息清单
+│   ├── paper/                 # MS-09 论文源稿、构建脚本、缺信息清单
 │   └── *.md                   # 需求、架构、数据库、API、解析、测试、路线图
 ├── deliverables/MS-09/        # Word/PDF、图表/表清单、交付报告
-└── docs/paper/                # 论文 Markdown、构建脚本、待补信息
 ```
 
 ---
@@ -371,12 +370,13 @@ MS08_PERF_OK
 | 测试场景 | 平均耗时 | 中位数 | P95 |
 | --- | ---: | ---: | ---: |
 | 100 行解析 HTTP | 2.29ms | 2.12ms | 2.81ms |
-| 10000 条分页查询 | 3.12ms | 3.10ms | 3.59ms |
+| 10000 条数据集分页（pageSize=10） | 3.12ms | 3.10ms | 3.59ms |
 
 - 30 个有效样本，预热 2 次；
 - 真实 HTTP 请求；
-- 分页查询使用隔离 Schema 中 10000 条虚构数据；
-- 本机单机结果，不是生产性能承诺；
+- 10000 条是隔离 Schema 中测试数据集的记录总量；
+- 分页查询固定 `page=1&size=10`，即每页 10 条，不是一次返回 10000 条；
+- P95 3.59ms 是本机 30 个有效样本的结果，不是生产环境性能承诺；
 - 原始数据：`docs/test-results/ms-08/perf-results.json`。
 
 ### 11.5 浏览器与 CI
@@ -400,7 +400,7 @@ MS08_PERF_OK
 | MS-07 Servlet 映射 | 已完成 | 2.20，三个真实 Servlet + Spring MVC 对照 |
 | MS-08 全量测试 | 已实施，未正式结束 | 160 tests、Chrome/Edge、E2E、性能；D08 P1 OPEN |
 | MS-09 论文与截图 | PARTIAL | 正文/Word/PDF 已生成；封面信息与 2.21 四图 BLOCKED |
-| MS-10 验收与答辩 | 未开始 | 演示脚本、答辩 Q&A、可运行环境 |
+| MS-10 验收与答辩 | PARTIAL | 验收矩阵、环境/复现/数据安全、5/10 分钟脚本、46 题 Q&A、故障/证据已交付；实际 DB 演示 BLOCKED |
 
 **MS-08 状态：** AC-30 = PARTIAL；AC-31 = PASS；AC-32 = PASS（本地验证，CI NOT RUN）；D08 = OPEN，P1。
 MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处置；尚未完成第二台物理设备远程验证；用户尚未授权修改 MySQL/防火墙；不能声称外部登录成功或 MS-08 无条件通过。
@@ -463,6 +463,8 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 | [`docs/review/`](docs/review/) | 各阶段审计、缺陷与交付报告 |
 | [`docs/security/`](docs/security/) | D08 风险分析与人工处置指南 |
 | [`docs/test-results/ms-08/`](docs/test-results/ms-08/) | 测试、性能、安全、兼容性原始记录 |
+| [`docs/acceptance/`](docs/acceptance/) | MS-10 验收矩阵、环境、复现、演示、Q&A、故障与证据 |
+| [`docs/test-results/ms-10/`](docs/test-results/ms-10/) | MS-10 演示演练记录 |
 | [`docs/paper/快递地址簿录入程序设计.md`](docs/paper/快递地址簿录入程序设计.md) | 论文 Markdown |
 | [`deliverables/MS-09/`](deliverables/MS-09/) | Word/PDF 与图表清单 |
 
@@ -481,10 +483,10 @@ MySQL X Plugin 33060 对全部接口监听、mysqld 宽泛入站规则尚未处�
 | 里程碑 | 当前状态 | 内容 |
 | --- | --- | --- |
 | MS-09 | PARTIAL | 论文正文/Word/PDF 已生成；封面信息、2.21 四张业务截图、PDF 目录待补 |
-| MS-10 | 未开始 | 验收与答辩准备：演示脚本、答辩 Q&A、可运行环境 |
+| MS-10 | PARTIAL | 材料已完成；MySQL 未启动导致保存/列表/编辑/删除演示 BLOCKED |
 | D08 | P1 OPEN | MySQL X Plugin 33060/防火墙风险待用户授权处置 |
 
-**MS-08 尚未正式结束；MS-09 未正式通过；MS-10 未开始。**
+**MS-08 尚未正式结束；MS-09 未正式通过；MS-10 为 PARTIAL，实际 DB 演示未完成，项目未达到正式验收条件。**
 
 ---
 
